@@ -1,7 +1,7 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
-from pypdf import PdfMerger
+from pypdf import PdfReader, PdfWriter
 import io
 
 app = FastAPI()
@@ -23,7 +23,7 @@ async def merge_pdfs(files: list[UploadFile] = File(...)):
     if len(files) < 2:
         raise HTTPException(status_code=400, detail="At least 2 PDF files required")
 
-    merger = PdfMerger()
+    writer = PdfWriter()
 
     try:
         for file in files:
@@ -35,11 +35,13 @@ async def merge_pdfs(files: list[UploadFile] = File(...)):
 
             content = await file.read()
             file_obj = io.BytesIO(content)
-            merger.append(file_obj)
+            reader = PdfReader(file_obj)
+            
+            for page in reader.pages:
+                writer.add_page(page)
 
         output = io.BytesIO()
-        merger.write(output)
-        merger.close()
+        writer.write(output)
         output.seek(0)
 
         return StreamingResponse(
