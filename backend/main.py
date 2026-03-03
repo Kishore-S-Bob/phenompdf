@@ -55,6 +55,67 @@ async def merge_pdfs(files: list[UploadFile] = File(...)):
         raise HTTPException(status_code=500, detail=f"Error merging PDFs: {str(e)}")
 
 
+@app.post("/split")
+async def split_pdf(
+    file: UploadFile = File(...),
+    start_page: int = 1,
+    end_page: int = 1
+):
+    if not file:
+        raise HTTPException(status_code=400, detail="No file provided")
+
+    if not file.filename.lower().endswith(".pdf"):
+        raise HTTPException(
+            status_code=400,
+            detail=f"File {file.filename} is not a PDF"
+        )
+
+    if start_page < 1:
+        raise HTTPException(status_code=400, detail="Start page must be at least 1")
+
+    if end_page < start_page:
+        raise HTTPException(status_code=400, detail="End page must be greater than or equal to start page")
+
+    try:
+        content = await file.read()
+        file_obj = io.BytesIO(content)
+        reader = PdfReader(file_obj)
+        total_pages = len(reader.pages)
+
+        if start_page > total_pages:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Start page ({start_page}) exceeds total pages ({total_pages})"
+            )
+
+        if end_page > total_pages:
+            raise HTTPException(
+                status_code=400,
+                detail=f"End page ({end_page}) exceeds total pages ({total_pages})"
+            )
+
+        writer = PdfWriter()
+
+        for page_num in range(start_page - 1, end_page):
+            writer.add_page(reader.pages[page_num])
+
+        output = io.BytesIO()
+        writer.write(output)
+        output.seek(0)
+
+        return StreamingResponse(
+            iter([output.getvalue()]),
+            media_type="application/pdf",
+            headers={
+                "Content-Disposition": f"attachment; filename=split_{start_page}-{end_page}.pdf"
+            }
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error splitting PDF: {str(e)}")
+
+
 @app.get("/health")
 async def health_check():
     return {"status": "ok"}
