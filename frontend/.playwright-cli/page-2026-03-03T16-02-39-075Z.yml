@@ -1,0 +1,36 @@
+- generic [ref=e4]:
+  - generic [ref=e5]:
+    - heading "Merge PDF Files" [level=1] [ref=e6]
+    - paragraph [ref=e7]: Upload multiple PDFs and merge them into a single file
+  - generic [ref=e10] [cursor=pointer]:
+    - img [ref=e12]
+    - generic [ref=e14]:
+      - paragraph [ref=e15]: Drag and drop PDF files here
+      - paragraph [ref=e16]: or click to browse
+    - paragraph [ref=e17]: Only PDF files are accepted
+  - generic [ref=e19]:
+    - heading "Uploaded Files (2)" [level=3] [ref=e39]
+    - list [ref=e24]:
+      - listitem [ref=e25]:
+        - generic [ref=e26]:
+          - button "Move up" [disabled] [ref=e27]:
+            - img [ref=e28]
+          - button "Move down" [ref=e30]:
+            - img [ref=e31]
+        - generic [ref=e33]:
+          - paragraph [ref=e34]: 1. test1.pdf
+          - paragraph [ref=e35]: 0.00 MB
+        - button "Remove file" [ref=e36]:
+          - img [ref=e37]
+      - listitem [ref=e40]:
+        - generic [ref=e41]:
+          - button "Move up" [ref=e42]:
+            - img [ref=e43]
+          - button "Move down" [disabled] [ref=e45]:
+            - img [ref=e46]
+        - generic [ref=e48]:
+          - paragraph [ref=e49]: 2. test2.pdf
+          - paragraph [ref=e50]: 0.00 MB
+        - button "Remove file" [ref=e51]:
+          - img [ref=e52]
+  - button "Merge PDFs" [ref=e22]
