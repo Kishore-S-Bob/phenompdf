@@ -136,7 +136,7 @@ async def compress_pdf(file: UploadFile = File(...)):
         with pikepdf.open(file_obj) as pdf:
             # Create output in memory
             output = io.BytesIO()
-            pdf.save(output, optimize=True, linearize=True)
+            pdf.save(output, compress_streams=True, linearize=True)
             output.seek(0)
 
             return StreamingResponse(
