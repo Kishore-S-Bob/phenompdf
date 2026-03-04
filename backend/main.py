@@ -4,6 +4,9 @@ from fastapi.responses import StreamingResponse
 from pypdf import PdfReader, PdfWriter
 import pikepdf
 import io
+import zipfile
+from pdf2image import convert_from_bytes
+from PIL import Image
 
 app = FastAPI()
 
@@ -150,6 +153,73 @@ async def compress_pdf(file: UploadFile = File(...)):
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error compressing PDF: {str(e)}")
+
+
+@app.post("/pdf-to-image")
+async def pdf_to_image(
+    file: UploadFile = File(...),
+    format: str = "png"
+):
+    if not file:
+        raise HTTPException(status_code=400, detail="No file provided")
+
+    if not file.filename.lower().endswith(".pdf"):
+        raise HTTPException(
+            status_code=400,
+            detail=f"File {file.filename} is not a PDF"
+        )
+
+    if format not in ["png", "jpg"]:
+        raise HTTPException(
+            status_code=400,
+            detail="Output format must be 'png' or 'jpg'"
+        )
+
+    try:
+        content = await file.read()
+        
+        # Convert PDF to images
+        images = convert_from_bytes(content)
+        
+        if not images:
+            raise HTTPException(status_code=400, detail="No pages found in PDF")
+
+        # Create ZIP file in memory
+        output_buffer = io.BytesIO()
+        
+        with zipfile.ZipFile(output_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+            for i, image in enumerate(images):
+                img_buffer = io.BytesIO()
+                
+                # Determine format and quality
+                if format.lower() == "jpg":
+                    # Convert to RGB for JPG (removes alpha channel)
+                    image = image.convert('RGB')
+                    image.save(img_buffer, format='JPEG', quality=95)
+                    file_ext = 'jpg'
+                else:
+                    image.save(img_buffer, format='PNG')
+                    file_ext = 'png'
+                
+                img_buffer.seek(0)
+                
+                # Add to ZIP with sequential naming
+                file_name = f"page_{i + 1}.{file_ext}"
+                zip_file.writestr(file_name, img_buffer.getvalue())
+
+        output_buffer.seek(0)
+
+        return StreamingResponse(
+            iter([output_buffer.getvalue()]),
+            media_type="application/zip",
+            headers={
+                "Content-Disposition": f"attachment; filename=images.zip"
+            }
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error converting PDF to images: {str(e)}")
 
 
 @app.get("/health")
