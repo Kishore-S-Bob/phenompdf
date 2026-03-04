@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import MergePage from './pages/MergePage';
 import SplitPage from './pages/SplitPage';
+import CompressPage from './pages/CompressPage';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('merge');
@@ -41,11 +42,26 @@ export default function App() {
               </svg>
               Split PDF
             </button>
+            <button
+              onClick={() => setActiveTab('compress')}
+              className={`
+                px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center gap-2
+                ${activeTab === 'compress'
+                  ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md'
+                  : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
+                }
+              `}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+              </svg>
+              Compress PDF
+            </button>
           </div>
         </div>
 
         {/* Page Content */}
-        {activeTab === 'merge' ? <MergePage /> : <SplitPage />}
+        {activeTab === 'merge' ? <MergePage /> : activeTab === 'split' ? <SplitPage /> : <CompressPage />}
       </div>
     </div>
   );

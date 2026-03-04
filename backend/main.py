@@ -2,6 +2,7 @@ from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pypdf import PdfReader, PdfWriter
+import pikepdf
 import io
 
 app = FastAPI()
@@ -114,6 +115,41 @@ async def split_pdf(
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error splitting PDF: {str(e)}")
+
+
+@app.post("/compress")
+async def compress_pdf(file: UploadFile = File(...)):
+    if not file:
+        raise HTTPException(status_code=400, detail="No file provided")
+
+    if not file.filename.lower().endswith(".pdf"):
+        raise HTTPException(
+            status_code=400,
+            detail=f"File {file.filename} is not a PDF"
+        )
+
+    try:
+        content = await file.read()
+        file_obj = io.BytesIO(content)
+
+        # Open PDF with pikepdf for compression
+        with pikepdf.open(file_obj) as pdf:
+            # Create output in memory
+            output = io.BytesIO()
+            pdf.save(output, optimize=True, linearize=True)
+            output.seek(0)
+
+            return StreamingResponse(
+                iter([output.getvalue()]),
+                media_type="application/pdf",
+                headers={
+                    "Content-Disposition": "attachment; filename=compressed.pdf"
+                }
+            )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error compressing PDF: {str(e)}")
 
 
 @app.get("/health")
