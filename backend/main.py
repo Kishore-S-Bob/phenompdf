@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pypdf import PdfReader, PdfWriter
@@ -7,6 +7,7 @@ import io
 import zipfile
 from pdf2image import convert_from_bytes
 from PIL import Image
+import json
 
 app = FastAPI()
 
@@ -228,11 +229,11 @@ async def image_to_pdf(files: list[UploadFile] = File(...)):
         raise HTTPException(status_code=400, detail="No files provided")
 
     valid_extensions = ('.png', '.jpg', '.jpeg')
-    
+
     try:
         # Create a PDF in memory
         output_buffer = io.BytesIO()
-        
+
         # Store all images first to calculate dimensions
         pil_images = []
         for file in files:
@@ -241,23 +242,23 @@ async def image_to_pdf(files: list[UploadFile] = File(...)):
                     status_code=400,
                     detail=f"File {file.filename} is not a supported image (PNG, JPG)"
                 )
-            
+
             content = await file.read()
             image = Image.open(io.BytesIO(content))
-            
+
             # Convert to RGB if necessary (handles RGBA and other modes)
             if image.mode != 'RGB':
                 image = image.convert('RGB')
-            
+
             pil_images.append(image)
-        
+
         if not pil_images:
             raise HTTPException(status_code=400, detail="No valid images provided")
-        
+
         # Save all images to a single PDF using Pillow
         first_image = pil_images[0]
         remaining_images = pil_images[1:] if len(pil_images) > 1 else []
-        
+
         first_image.save(
             output_buffer,
             format='PDF',
@@ -265,9 +266,9 @@ async def image_to_pdf(files: list[UploadFile] = File(...)):
             append_images=remaining_images,
             resolution=100.0
         )
-        
+
         output_buffer.seek(0)
-        
+
         return StreamingResponse(
             iter([output_buffer.getvalue()]),
             media_type="application/pdf",
@@ -279,6 +280,82 @@ async def image_to_pdf(files: list[UploadFile] = File(...)):
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error converting images to PDF: {str(e)}")
+
+
+@app.post("/reorder")
+async def reorder_pdf(
+    file: UploadFile = File(...),
+    page_order: str = Form(...)
+):
+    if not file:
+        raise HTTPException(status_code=400, detail="No file provided")
+
+    if not file.filename.lower().endswith(".pdf"):
+        raise HTTPException(
+            status_code=400,
+            detail=f"File {file.filename} is not a PDF"
+        )
+
+    try:
+        content = await file.read()
+        file_obj = io.BytesIO(content)
+        reader = PdfReader(file_obj)
+        total_pages = len(reader.pages)
+
+        # Parse page order from JSON string
+        try:
+            new_order = json.loads(page_order)
+        except json.JSONDecodeError:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid page order format"
+            )
+
+        if not isinstance(new_order, list):
+            raise HTTPException(
+                status_code=400,
+                detail="Page order must be an array"
+            )
+
+        if not new_order:
+            raise HTTPException(
+                status_code=400,
+                detail="Page order cannot be empty"
+            )
+
+        # Validate page numbers
+        for page_num in new_order:
+            if not isinstance(page_num, int):
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Page number must be an integer, got {type(page_num)}"
+                )
+            if page_num < 1 or page_num > total_pages:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Page number {page_num} is out of range (1-{total_pages})"
+                )
+
+        # Create new PDF with reordered pages
+        writer = PdfWriter()
+        for page_num in new_order:
+            writer.add_page(reader.pages[page_num - 1])
+
+        output = io.BytesIO()
+        writer.write(output)
+        output.seek(0)
+
+        return StreamingResponse(
+            iter([output.getvalue()]),
+            media_type="application/pdf",
+            headers={
+                "Content-Disposition": "attachment; filename=reordered.pdf"
+            }
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error reordering PDF: {str(e)}")
 
 
 @app.get("/health")

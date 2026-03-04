@@ -4,6 +4,7 @@ import SplitPage from './pages/SplitPage';
 import CompressPage from './pages/CompressPage';
 import PdfToImagePage from './pages/PdfToImagePage';
 import ImageToPdfPage from './pages/ImageToPdfPage';
+import ReorderPage from './pages/ReorderPage';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('merge');
@@ -89,6 +90,21 @@ export default function App() {
               </svg>
               Image to PDF
             </button>
+            <button
+              onClick={() => setActiveTab('reorder')}
+              className={`
+                px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center gap-2
+                ${activeTab === 'reorder'
+                  ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md'
+                  : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
+                }
+              `}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+              </svg>
+              Reorder PDF
+            </button>
           </div>
         </div>
 
@@ -101,8 +117,10 @@ export default function App() {
           <CompressPage />
         ) : activeTab === 'pdf-to-image' ? (
           <PdfToImagePage />
-        ) : (
+        ) : activeTab === 'image-to-pdf' ? (
           <ImageToPdfPage />
+        ) : (
+          <ReorderPage />
         )}
       </div>
     </div>

@@ -80,3 +80,6 @@ pdf/
 - `POST /merge` - Merge multiple PDF files
   - Accepts: Form data with multiple PDF files
   - Returns: Merged PDF file
+- `POST /reorder` - Reorder PDF pages
+  - Accepts: Form data with PDF file and page_order (JSON array of page numbers, 1-indexed)
+  - Returns: Reordered PDF file
