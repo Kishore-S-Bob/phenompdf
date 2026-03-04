@@ -60,7 +60,11 @@ export default function MergePage() {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch (err) {
-      setError(err.message);
+      if (err.name === 'TypeError' && err.message === 'Failed to fetch') {
+        setError('Unable to connect to the server. Please make sure the backend is running on http://localhost:8000');
+      } else {
+        setError(err.message);
+      }
     } finally {
       setIsMerging(false);
     }
