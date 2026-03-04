@@ -3,6 +3,7 @@ import MergePage from './pages/MergePage';
 import SplitPage from './pages/SplitPage';
 import CompressPage from './pages/CompressPage';
 import PdfToImagePage from './pages/PdfToImagePage';
+import ImageToPdfPage from './pages/ImageToPdfPage';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('merge');
@@ -73,6 +74,21 @@ export default function App() {
               </svg>
               PDF to Image
             </button>
+            <button
+              onClick={() => setActiveTab('image-to-pdf')}
+              className={`
+                px-6 py-3 rounded-lg font-medium transition-all duration-200 flex items-center gap-2
+                ${activeTab === 'image-to-pdf'
+                  ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md'
+                  : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
+                }
+              `}
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+              Image to PDF
+            </button>
           </div>
         </div>
 
@@ -83,8 +99,10 @@ export default function App() {
           <SplitPage />
         ) : activeTab === 'compress' ? (
           <CompressPage />
-        ) : (
+        ) : activeTab === 'pdf-to-image' ? (
           <PdfToImagePage />
+        ) : (
+          <ImageToPdfPage />
         )}
       </div>
     </div>

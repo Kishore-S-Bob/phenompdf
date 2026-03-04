@@ -222,6 +222,65 @@ async def pdf_to_image(
         raise HTTPException(status_code=500, detail=f"Error converting PDF to images: {str(e)}")
 
 
+@app.post("/image-to-pdf")
+async def image_to_pdf(files: list[UploadFile] = File(...)):
+    if not files:
+        raise HTTPException(status_code=400, detail="No files provided")
+
+    valid_extensions = ('.png', '.jpg', '.jpeg')
+    
+    try:
+        # Create a PDF in memory
+        output_buffer = io.BytesIO()
+        
+        # Store all images first to calculate dimensions
+        pil_images = []
+        for file in files:
+            if not file.filename.lower().endswith(valid_extensions):
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"File {file.filename} is not a supported image (PNG, JPG)"
+                )
+            
+            content = await file.read()
+            image = Image.open(io.BytesIO(content))
+            
+            # Convert to RGB if necessary (handles RGBA and other modes)
+            if image.mode != 'RGB':
+                image = image.convert('RGB')
+            
+            pil_images.append(image)
+        
+        if not pil_images:
+            raise HTTPException(status_code=400, detail="No valid images provided")
+        
+        # Save all images to a single PDF using Pillow
+        first_image = pil_images[0]
+        remaining_images = pil_images[1:] if len(pil_images) > 1 else []
+        
+        first_image.save(
+            output_buffer,
+            format='PDF',
+            save_all=True,
+            append_images=remaining_images,
+            resolution=100.0
+        )
+        
+        output_buffer.seek(0)
+        
+        return StreamingResponse(
+            iter([output_buffer.getvalue()]),
+            media_type="application/pdf",
+            headers={
+                "Content-Disposition": "attachment; filename=converted.pdf"
+            }
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error converting images to PDF: {str(e)}")
+
+
 @app.get("/health")
 async def health_check():
     return {"status": "ok"}
