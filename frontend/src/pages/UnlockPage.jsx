@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import SingleDropZone from '../components/SingleDropZone';
+import { API_BASE } from '../api';
 
 export default function UnlockPage() {
   const [file, setFile] = useState(null);
@@ -34,7 +35,7 @@ export default function UnlockPage() {
       formData.append('file', file);
       formData.append('password', password);
 
-      const response = await fetch('http://localhost:8000/unlock', {
+      const response = await fetch(`${API_BASE}/unlock`, {
         method: 'POST',
         body: formData,
       });

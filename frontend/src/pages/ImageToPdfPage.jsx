@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { API_BASE } from '../api';
 
 export default function ImageToPdfPage() {
   const [images, setImages] = useState([]);
@@ -120,7 +121,7 @@ export default function ImageToPdfPage() {
         formData.append('files', img.file);
       });
 
-      const response = await fetch('http://localhost:8000/image-to-pdf', {
+      const response = await fetch(`${API_BASE}/image-to-pdf`, {
         method: 'POST',
         body: formData,
       });

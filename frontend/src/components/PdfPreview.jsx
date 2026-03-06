@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { API_BASE } from '../api';
 
 export default function PdfPreview({ file, onTotalPagesChange, maxSize = 200 }) {
   const [thumbnails, setThumbnails] = useState([]);
@@ -28,7 +29,7 @@ export default function PdfPreview({ file, onTotalPagesChange, maxSize = 200 }) 
         formData.append('file', file);
         formData.append('max_size', maxSize);
 
-        const response = await fetch('http://localhost:8000/pdf-preview', {
+        const response = await fetch(`${API_BASE}/pdf-preview`, {
           method: 'POST',
           body: formData,
         });

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import SingleDropZone from '../components/SingleDropZone';
+import { API_BASE } from '../api';
 
 export default function PdfToImagePage() {
   const [file, setFile] = useState(null);
@@ -29,7 +30,7 @@ export default function PdfToImagePage() {
       formData.append('file', file);
       formData.append('format', format);
 
-      const response = await fetch('http://localhost:8000/pdf-to-image', {
+      const response = await fetch(`${API_BASE}/pdf-to-image`, {
         method: 'POST',
         body: formData,
       });

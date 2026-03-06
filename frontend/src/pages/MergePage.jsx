@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import DropZone from '../components/DropZone';
 import FileList from '../components/FileList';
+import { API_BASE } from '../api';
 
 export default function MergePage() {
   const [files, setFiles] = useState([]);
@@ -40,7 +41,7 @@ export default function MergePage() {
         formData.append('files', file);
       });
 
-      const response = await fetch('http://localhost:8000/merge', {
+      const response = await fetch(`${API_BASE}/merge`, {
         method: 'POST',
         body: formData,
       });

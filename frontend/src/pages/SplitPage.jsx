@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import SingleDropZone from '../components/SingleDropZone';
 import PdfPreview from '../components/PdfPreview';
+import { API_BASE } from '../api';
 
 export default function SplitPage() {
   const [file, setFile] = useState(null);
@@ -68,7 +69,7 @@ export default function SplitPage() {
       formData.append('start_page', start);
       formData.append('end_page', end);
 
-      const response = await fetch('http://localhost:8000/split', {
+      const response = await fetch(`${API_BASE}/split`, {
         method: 'POST',
         body: formData,
       });

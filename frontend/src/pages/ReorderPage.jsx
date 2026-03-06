@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import SingleDropZone from '../components/SingleDropZone';
+import { API_BASE } from '../api';
 
 const ItemType = 'PAGE';
 
@@ -91,7 +92,7 @@ export default function ReorderPage() {
         const formData = new FormData();
         formData.append('file', newFile);
 
-        const response = await fetch('http://localhost:8000/pdf-preview', {
+        const response = await fetch(`${API_BASE}/pdf-preview`, {
           method: 'POST',
           body: formData,
         });
@@ -152,7 +153,7 @@ export default function ReorderPage() {
       formData.append('file', file);
       formData.append('page_order', JSON.stringify(pageOrder));
 
-      const response = await fetch('http://localhost:8000/reorder', {
+      const response = await fetch(`${API_BASE}/reorder`, {
         method: 'POST',
         body: formData,
       });

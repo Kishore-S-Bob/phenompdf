@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import SingleDropZone from '../components/SingleDropZone';
+import { API_BASE } from '../api';
 
 export default function CompressPage() {
   const [file, setFile] = useState(null);
@@ -41,7 +42,7 @@ export default function CompressPage() {
 
       setOriginalSize(file.size);
 
-      const response = await fetch('http://localhost:8000/compress', {
+      const response = await fetch(`${API_BASE}/compress`, {
         method: 'POST',
         body: formData,
       });
