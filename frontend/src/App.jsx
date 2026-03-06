@@ -7,20 +7,77 @@ import ImageToPdfPage from './pages/ImageToPdfPage';
 import ReorderPage from './pages/ReorderPage';
 import ProtectPage from './pages/ProtectPage';
 import UnlockPage from './pages/UnlockPage';
+import Footer from './components/Footer';
+
+// Tool Icons as components for better styling control
+const MergeIcon = () => (
+  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+  </svg>
+);
+
+const SplitIcon = () => (
+  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
+  </svg>
+);
+
+const CompressIcon = () => (
+  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 3v11m-4-4l4-4 4 4" />
+  </svg>
+);
+
+const PdfToImageIcon = () => (
+  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+  </svg>
+);
+
+const ImageToPdfIcon = () => (
+  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 13l2 2 4-4" />
+  </svg>
+);
+
+const ReorderIcon = () => (
+  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+  </svg>
+);
+
+const ProtectIcon = () => (
+  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+  </svg>
+);
+
+const UnlockIcon = () => (
+  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+  </svg>
+);
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('merge');
 
   const tools = [
-    { id: 'merge', label: 'Merge PDF', icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z' },
-    { id: 'split', label: 'Split PDF', icon: 'M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2' },
-    { id: 'compress', label: 'Compress PDF', icon: 'M19 14l-7 7m0 0l-7-7m7 7V3' },
-    { id: 'pdf-to-image', label: 'PDF → Image', icon: 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z' },
-    { id: 'image-to-pdf', label: 'Image → PDF', icon: 'M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z' },
-    { id: 'reorder', label: 'Reorder PDF', icon: 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4' },
-    { id: 'protect', label: 'Protect PDF', icon: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z' },
-    { id: 'unlock', label: 'Unlock PDF', icon: 'M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z' },
+    { id: 'merge', label: 'Merge PDF', description: 'Combine multiple PDFs into one', icon: MergeIcon },
+    { id: 'split', label: 'Split PDF', description: 'Extract pages from your PDF', icon: SplitIcon },
+    { id: 'compress', label: 'Compress PDF', description: 'Reduce file size while keeping quality', icon: CompressIcon },
+    { id: 'pdf-to-image', label: 'PDF → Image', description: 'Convert PDF pages to images', icon: PdfToImageIcon },
+    { id: 'image-to-pdf', label: 'Image → PDF', description: 'Convert images to a single PDF', icon: ImageToPdfIcon },
+    { id: 'reorder', label: 'Reorder PDF', description: 'Rearrange pages in your PDF', icon: ReorderIcon },
+    { id: 'protect', label: 'Protect PDF', description: 'Add password protection', icon: ProtectIcon },
+    { id: 'unlock', label: 'Unlock PDF', description: 'Remove password protection', icon: UnlockIcon },
   ];
+
+  const handleToolClick = (toolId) => {
+    setActiveTab(toolId);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const renderPage = () => {
     switch (activeTab) {
@@ -37,32 +94,35 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20">
       {/* Navigation Bar */}
-      <header className="bg-white shadow-md sticky top-0 z-50">
+      <header className="bg-white/80 backdrop-blur-xl border-b border-gray-200/80 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             {/* Brand Name */}
-            <div className="flex flex-col cursor-pointer" onClick={() => setActiveTab('merge')}>
-              <h1 className="text-3xl font-extrabold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent tracking-tight">
+            <div
+              className="flex flex-col cursor-pointer group"
+              onClick={() => handleToolClick('merge')}
+            >
+              <h1 className="text-3xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent tracking-tight group-hover:from-blue-500 group-hover:via-purple-500 group-hover:to-indigo-500 transition-all">
                 PhenomPDF
               </h1>
               <span className="text-xs text-gray-500 font-medium -mt-1">
-                The Phenomenal PDF Toolkit
+                Professional PDF Toolkit
               </span>
             </div>
 
-            {/* Navigation Tabs */}
-            <nav className="hidden md:flex flex-wrap justify-center gap-1">
-              {tools.map((tool) => (
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center gap-1 bg-gray-100/80 p-1 rounded-xl">
+              {tools.slice(0, 5).map((tool) => (
                 <button
                   key={tool.id}
-                  onClick={() => setActiveTab(tool.id)}
+                  onClick={() => handleToolClick(tool.id)}
                   className={`
-                    px-4 py-2 rounded-lg font-medium transition-all duration-200 text-sm
+                    px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200
                     ${activeTab === tool.id
-                      ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md'
-                      : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
+                      ? 'bg-white text-blue-600 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200/50'
                     }
                   `}
                 >
@@ -70,80 +130,133 @@ export default function App() {
                 </button>
               ))}
             </nav>
+
+            {/* Mobile Menu Button */}
+            <button className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors">
+              <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
           </div>
         </div>
       </header>
 
       {/* Hero Section */}
-      <div className="text-center py-12 px-4 bg-gradient-to-r from-blue-600 to-purple-600">
-        <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-          PhenomPDF
-        </h2>
-        <p className="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto">
-          Merge, split, compress and convert PDFs quickly and securely.
-        </p>
-      </div>
-
-      {/* Tool Cards Grid */}
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-          {tools.map((tool) => (
-            <button
-              key={tool.id}
-              onClick={() => setActiveTab(tool.id)}
-              className={`
-                group p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-xl
-                ${activeTab === tool.id
-                  ? 'bg-gradient-to-br from-blue-500 to-purple-600 text-white shadow-lg'
-                  : 'bg-white text-gray-700 shadow-md hover:shadow-lg'
-                }
-              `}
-            >
-              <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-colors
-                ${activeTab === tool.id
-                  ? 'bg-white/20'
-                  : 'bg-blue-50 group-hover:bg-blue-100'
-                }
-              `}>
-                <svg 
-                  className={`w-6 h-6 transition-colors ${
-                    activeTab === tool.id ? 'text-white' : 'text-blue-600'
-                  }`} 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={tool.icon} />
-                </svg>
-              </div>
-              <span className={`font-semibold text-sm md:text-base block ${
-                activeTab === tool.id ? 'text-white' : 'text-gray-800'
-              }`}>
-                {tool.label}
-              </span>
-            </button>
-          ))}
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600" />
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSIyIi8+PC9nPjwvZz48L3N2Zz4=')] opacity-30" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+          <div className="text-center">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight">
+              PhenomPDF
+            </h2>
+            <p className="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto leading-relaxed">
+              Merge, split, compress and convert PDFs with professional-grade tools.
+              Fast, secure, and completely free.
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* Mobile Navigation */}
-      <div className="md:hidden px-4 mb-6">
-        <div className="bg-white rounded-xl shadow-md p-1 inline-flex flex-wrap justify-center w-full">
+      {/* Tool Cards Grid */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14 -mt-8 relative z-10">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+          {tools.map((tool) => {
+            const IconComponent = tool.icon;
+            return (
+              <button
+                key={tool.id}
+                onClick={() => handleToolClick(tool.id)}
+                className={`
+                  group relative overflow-hidden rounded-2xl p-6 text-left
+                  transition-all duration-300 ease-out
+                  hover:-translate-y-2 hover:shadow-2xl
+                  active:scale-[0.98]
+                  ${activeTab === tool.id
+                    ? 'bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-600 text-white shadow-lg shadow-purple-500/25'
+                    : 'bg-white text-gray-700 shadow-lg shadow-gray-200/50 hover:shadow-xl hover:shadow-blue-500/10'
+                  }
+                `}
+              >
+                {/* Hover Glow Effect */}
+                <div className={`
+                  absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500
+                  ${activeTab === tool.id
+                    ? 'bg-gradient-to-br from-white/10 to-transparent'
+                    : 'bg-gradient-to-br from-blue-50/50 via-purple-50/30 to-transparent'
+                  }
+                `} />
+
+                {/* Icon Container */}
+                <div className={`
+                  relative w-14 h-14 rounded-xl flex items-center justify-center mb-4
+                  transition-all duration-300
+                  ${activeTab === tool.id
+                    ? 'bg-white/20 shadow-inner'
+                    : 'bg-gradient-to-br from-blue-50 to-indigo-50 group-hover:from-blue-100 group-hover:to-indigo-100 group-hover:scale-110 group-hover:shadow-md'
+                  }
+                `}>
+                  <div className={activeTab === tool.id ? 'text-white' : 'text-blue-600'}>
+                    <IconComponent />
+                  </div>
+                </div>
+
+                {/* Content */}
+                <div className="relative">
+                  <h3 className={`
+                    font-bold text-base md:text-lg mb-1 transition-colors
+                    ${activeTab === tool.id ? 'text-white' : 'text-gray-900'}
+                  `}>
+                    {tool.label}
+                  </h3>
+                  <p className={`
+                    text-xs md:text-sm leading-relaxed
+                    ${activeTab === tool.id ? 'text-blue-100' : 'text-gray-500 group-hover:text-gray-600'}
+                  `}>
+                    {tool.description}
+                  </p>
+                </div>
+
+                {/* Active Indicator */}
+                {activeTab === tool.id && (
+                  <div className="absolute top-4 right-4 w-2 h-2 bg-white rounded-full animate-pulse" />
+                )}
+
+                {/* Arrow on hover */}
+                <div className={`
+                  absolute bottom-4 right-4 transition-all duration-300
+                  ${activeTab === tool.id
+                    ? 'opacity-100 translate-x-0'
+                    : 'opacity-0 translate-x-2 group-hover:opacity-100 group-hover:translate-x-0'
+                  }
+                `}>
+                  <svg className={`w-5 h-5 ${activeTab === tool.id ? 'text-white' : 'text-blue-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Mobile Navigation - Horizontal Scroll */}
+      <div className="lg:hidden max-w-7xl mx-auto px-4 sm:px-6 -mt-4 mb-8">
+        <div className="flex gap-2 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4">
           {tools.map((tool) => (
             <button
               key={tool.id}
-              onClick={() => setActiveTab(tool.id)}
+              onClick={() => handleToolClick(tool.id)}
               className={`
-                px-3 py-2 rounded-lg font-medium transition-all duration-200 text-xs flex items-center gap-1 flex-1 min-w-fit
+                flex-shrink-0 px-4 py-2.5 rounded-xl font-medium text-sm whitespace-nowrap
+                transition-all duration-200 flex items-center gap-2
                 ${activeTab === tool.id
                   ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md'
-                  : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
+                  : 'bg-white text-gray-600 shadow-sm border border-gray-100 hover:bg-gray-50'
                 }
               `}
             >
-              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={tool.icon} />
-              </svg>
+              <tool.icon />
               {tool.label}
             </button>
           ))}
@@ -151,9 +264,14 @@ export default function App() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-2xl mx-auto pb-12 px-4">
-        {renderPage()}
-      </div>
+      <main className="flex-1 max-w-3xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-12">
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+          {renderPage()}
+        </div>
+      </main>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
