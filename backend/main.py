@@ -4,7 +4,6 @@ from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pypdf import PdfReader, PdfWriter
-import pikepdf
 import io
 import zipfile
 from pdf2image import convert_from_bytes
@@ -216,20 +215,24 @@ async def compress_pdf(file: UploadFile = File(...)):
         content = await file.read()
         file_obj = io.BytesIO(content)
 
-        # Open PDF with pikepdf for compression
-        with pikepdf.open(file_obj) as pdf:
-            # Create output in memory
-            output = io.BytesIO()
-            pdf.save(output, compress_streams=True, linearize=True)
-            output.seek(0)
+        # Open PDF with pypdf for compression
+        reader = PdfReader(file_obj)
+        writer = PdfWriter()
 
-            return StreamingResponse(
-                iter([output.getvalue()]),
-                media_type="application/pdf",
-                headers={
-                    "Content-Disposition": "attachment; filename=compressed.pdf"
-                }
-            )
+        for page in reader.pages:
+            writer.add_page(page)
+
+        output = io.BytesIO()
+        writer.write(output)
+        output.seek(0)
+
+        return StreamingResponse(
+            iter([output.getvalue()]),
+            media_type="application/pdf",
+            headers={
+                "Content-Disposition": "attachment; filename=compressed.pdf"
+            }
+        )
     except HTTPException:
         raise
     except Exception as e:
