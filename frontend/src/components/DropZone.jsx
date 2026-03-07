@@ -46,7 +46,7 @@ export default function DropZone({ onFilesAdded }) {
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         className={`
-          border-2 border-dashed rounded-2xl p-10 text-center
+          w-full max-w-xl mx-auto border-2 border-dashed rounded-2xl p-8 sm:p-10 text-center
           transition-all duration-300 ease-out
           ${isDragging
             ? 'border-blue-500 bg-blue-50/80 scale-[1.02] shadow-lg shadow-blue-500/20'
@@ -64,7 +64,7 @@ export default function DropZone({ onFilesAdded }) {
         />
         <div className="flex flex-col items-center gap-5">
           <div className={`
-            w-20 h-20 rounded-2xl flex items-center justify-center
+            w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center
             transition-all duration-300
             ${isDragging
               ? 'bg-blue-100 scale-110 shadow-md shadow-blue-500/20'
@@ -73,7 +73,7 @@ export default function DropZone({ onFilesAdded }) {
           `}>
             <svg
               className={`
-                w-10 h-10 transition-colors duration-300
+                w-8 h-8 sm:w-10 sm:h-10 transition-colors duration-300
                 ${isDragging ? 'text-blue-600' : 'text-gray-400'}
               `}
               fill="none"
@@ -89,7 +89,7 @@ export default function DropZone({ onFilesAdded }) {
             </svg>
           </div>
           <div>
-            <p className="text-xl font-semibold text-gray-800">
+            <p className="text-lg sm:text-xl font-semibold text-gray-800">
               {isDragging ? 'Drop your PDFs here' : 'Drag & drop PDF files'}
             </p>
             <p className="text-sm text-gray-500 mt-2">
@@ -103,7 +103,7 @@ export default function DropZone({ onFilesAdded }) {
       <button
         onClick={handleClick}
         className="
-          mx-auto px-8 py-3 rounded-xl font-medium text-sm
+          mx-auto py-3 px-6 rounded-lg font-medium text-sm
           bg-white border border-gray-200 text-gray-700
           hover:bg-gray-50 hover:border-gray-300 hover:shadow-md
           active:scale-[0.98]

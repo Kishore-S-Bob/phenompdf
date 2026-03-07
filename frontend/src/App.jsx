@@ -104,7 +104,7 @@ export default function App() {
               className="flex flex-col cursor-pointer group"
               onClick={() => handleToolClick('merge')}
             >
-              <h1 className="text-3xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent tracking-tight group-hover:from-blue-500 group-hover:via-purple-500 group-hover:to-indigo-500 transition-all">
+              <h1 className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent tracking-tight group-hover:from-blue-500 group-hover:via-purple-500 group-hover:to-indigo-500 transition-all">
                 PhenomPDF
               </h1>
               <span className="text-xs text-gray-500 font-medium -mt-1">
@@ -112,14 +112,14 @@ export default function App() {
               </span>
             </div>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-1 bg-gray-100/80 p-1 rounded-xl">
-              {tools.slice(0, 5).map((tool) => (
+            {/* Desktop Navigation - All 8 tools visible */}
+            <nav className="hidden md:flex items-center gap-1 overflow-x-auto">
+              {tools.map((tool) => (
                 <button
                   key={tool.id}
                   onClick={() => handleToolClick(tool.id)}
                   className={`
-                    px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200
+                    px-3 lg:px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-all duration-200
                     ${activeTab === tool.id
                       ? 'bg-white text-blue-600 shadow-sm'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200/50'
@@ -132,7 +132,7 @@ export default function App() {
             </nav>
 
             {/* Mobile Menu Button */}
-            <button className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors">
+            <button className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors">
               <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               </svg>
@@ -145,12 +145,12 @@ export default function App() {
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600" />
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSIyIi8+PC9nPjwvZz48L3N2Zz4=')] opacity-30" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
           <div className="text-center">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
               PhenomPDF
             </h2>
-            <p className="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-sm sm:text-lg opacity-90 max-w-2xl mx-auto leading-relaxed">
               Merge, split, compress and convert PDFs with professional-grade tools.
               Fast, secure, and completely free.
             </p>
@@ -160,7 +160,7 @@ export default function App() {
 
       {/* Tool Cards Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14 -mt-8 relative z-10">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {tools.map((tool) => {
             const IconComponent = tool.icon;
             return (
@@ -168,13 +168,12 @@ export default function App() {
                 key={tool.id}
                 onClick={() => handleToolClick(tool.id)}
                 className={`
-                  group relative overflow-hidden rounded-2xl p-6 text-left
-                  transition-all duration-300 ease-out
-                  hover:-translate-y-2 hover:shadow-2xl
+                  group relative overflow-hidden rounded-2xl p-5 sm:p-6 text-left
+                  transition-all duration-300 ease-out hover:shadow-xl hover:-translate-y-1
                   active:scale-[0.98]
                   ${activeTab === tool.id
                     ? 'bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-600 text-white shadow-lg shadow-purple-500/25'
-                    : 'bg-white text-gray-700 shadow-lg shadow-gray-200/50 hover:shadow-xl hover:shadow-blue-500/10'
+                    : 'bg-white text-gray-700 shadow-lg shadow-gray-200/50'
                   }
                 `}
               >
@@ -241,14 +240,14 @@ export default function App() {
       </div>
 
       {/* Mobile Navigation - Horizontal Scroll */}
-      <div className="lg:hidden max-w-7xl mx-auto px-4 sm:px-6 -mt-4 mb-8">
-        <div className="flex gap-2 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4">
+      <div className="md:hidden max-w-7xl mx-auto px-4 sm:px-6 -mt-4 mb-8">
+        <nav className="flex gap-4 overflow-x-auto whitespace-nowrap scrollbar-hide -mx-4 px-4">
           {tools.map((tool) => (
             <button
               key={tool.id}
               onClick={() => handleToolClick(tool.id)}
               className={`
-                flex-shrink-0 px-4 py-2.5 rounded-xl font-medium text-sm whitespace-nowrap
+                flex-shrink-0 px-4 py-3 rounded-xl font-medium text-sm whitespace-nowrap
                 transition-all duration-200 flex items-center gap-2
                 ${activeTab === tool.id
                   ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md'
@@ -260,7 +259,7 @@ export default function App() {
               {tool.label}
             </button>
           ))}
-        </div>
+        </nav>
       </div>
 
       {/* Main Content */}
