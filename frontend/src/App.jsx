@@ -155,46 +155,6 @@ export default function App() {
               ))}
             </nav>
 
-            {/* Info Pages Navigation */}
-            <nav className="hidden md:flex items-center gap-1 ml-4 pl-4 border-l border-gray-200">
-              <button
-                onClick={() => handleInfoPageClick('privacy')}
-                className={`
-                  px-3 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-all duration-200
-                  ${showInfoPage === 'privacy'
-                    ? 'bg-white text-blue-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200/50'
-                  }
-                `}
-              >
-                Privacy
-              </button>
-              <button
-                onClick={() => handleInfoPageClick('terms')}
-                className={`
-                  px-3 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-all duration-200
-                  ${showInfoPage === 'terms'
-                    ? 'bg-white text-blue-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200/50'
-                  }
-                `}
-              >
-                Terms
-              </button>
-              <button
-                onClick={() => handleInfoPageClick('contact')}
-                className={`
-                  px-3 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-all duration-200
-                  ${showInfoPage === 'contact'
-                    ? 'bg-white text-blue-600 shadow-sm'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200/50'
-                  }
-                `}
-              >
-                Contact
-              </button>
-            </nav>
-
             {/* Mobile Menu Button */}
             <button className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors">
               <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -323,46 +283,6 @@ export default function App() {
               {tool.label}
             </button>
           ))}
-          {/* Info pages in mobile nav */}
-          <button
-            onClick={() => handleInfoPageClick('privacy')}
-            className={`
-              flex-shrink-0 px-4 py-3 rounded-xl font-medium text-sm whitespace-nowrap
-              transition-all duration-200 flex items-center gap-2
-              ${showInfoPage === 'privacy'
-                ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md'
-                : 'bg-white text-gray-600 shadow-sm border border-gray-100 hover:bg-gray-50'
-              }
-            `}
-          >
-            Privacy
-          </button>
-          <button
-            onClick={() => handleInfoPageClick('terms')}
-            className={`
-              flex-shrink-0 px-4 py-3 rounded-xl font-medium text-sm whitespace-nowrap
-              transition-all duration-200 flex items-center gap-2
-              ${showInfoPage === 'terms'
-                ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md'
-                : 'bg-white text-gray-600 shadow-sm border border-gray-100 hover:bg-gray-50'
-              }
-            `}
-          >
-            Terms
-          </button>
-          <button
-            onClick={() => handleInfoPageClick('contact')}
-            className={`
-              flex-shrink-0 px-4 py-3 rounded-xl font-medium text-sm whitespace-nowrap
-              transition-all duration-200 flex items-center gap-2
-              ${showInfoPage === 'contact'
-                ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md'
-                : 'bg-white text-gray-600 shadow-sm border border-gray-100 hover:bg-gray-50'
-              }
-            `}
-          >
-            Contact
-          </button>
         </nav>
       </div>
 
