@@ -1,4 +1,4 @@
-export default function Footer() {
+export default function Footer({ onNavigate }) {
   return (
     <footer className="bg-white border-t border-gray-200 mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -15,24 +15,24 @@ export default function Footer() {
 
           {/* Links */}
           <nav className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
-            <a
-              href="#"
+            <button
+              onClick={() => onNavigate('privacy')}
               className="text-sm text-gray-600 hover:text-blue-600 transition-colors duration-200"
             >
               Privacy Policy
-            </a>
-            <a
-              href="#"
+            </button>
+            <button
+              onClick={() => onNavigate('terms')}
               className="text-sm text-gray-600 hover:text-blue-600 transition-colors duration-200"
             >
               Terms of Service
-            </a>
-            <a
-              href="#"
+            </button>
+            <button
+              onClick={() => onNavigate('contact')}
               className="text-sm text-gray-600 hover:text-blue-600 transition-colors duration-200"
             >
               Contact
-            </a>
+            </button>
           </nav>
 
           {/* Copyright */}

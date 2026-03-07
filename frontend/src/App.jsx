@@ -7,6 +7,9 @@ import ImageToPdfPage from './pages/ImageToPdfPage';
 import ReorderPage from './pages/ReorderPage';
 import ProtectPage from './pages/ProtectPage';
 import UnlockPage from './pages/UnlockPage';
+import PrivacyPage from './pages/PrivacyPage';
+import TermsPage from './pages/TermsPage';
+import ContactPage from './pages/ContactPage';
 import Footer from './components/Footer';
 
 // Tool Icons as components for better styling control
@@ -62,6 +65,7 @@ const UnlockIcon = () => (
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('merge');
+  const [showInfoPage, setShowInfoPage] = useState(null);
 
   const tools = [
     { id: 'merge', label: 'Merge PDF', description: 'Combine multiple PDFs into one', icon: MergeIcon },
@@ -76,10 +80,30 @@ export default function App() {
 
   const handleToolClick = (toolId) => {
     setActiveTab(toolId);
+    setShowInfoPage(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleInfoPageClick = (page) => {
+    setShowInfoPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleHomeClick = () => {
+    setShowInfoPage(null);
+    setActiveTab('merge');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const renderPage = () => {
+    if (showInfoPage) {
+      switch (showInfoPage) {
+        case 'privacy': return <PrivacyPage />;
+        case 'terms': return <TermsPage />;
+        case 'contact': return <ContactPage />;
+        default: return <MergePage />;
+      }
+    }
     switch (activeTab) {
       case 'merge': return <MergePage />;
       case 'split': return <SplitPage />;
@@ -102,7 +126,7 @@ export default function App() {
             {/* Brand Name */}
             <div
               className="flex flex-col cursor-pointer group"
-              onClick={() => handleToolClick('merge')}
+              onClick={handleHomeClick}
             >
               <h1 className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent tracking-tight group-hover:from-blue-500 group-hover:via-purple-500 group-hover:to-indigo-500 transition-all">
                 PhenomPDF
@@ -120,7 +144,7 @@ export default function App() {
                   onClick={() => handleToolClick(tool.id)}
                   className={`
                     px-3 lg:px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-all duration-200
-                    ${activeTab === tool.id
+                    ${activeTab === tool.id && !showInfoPage
                       ? 'bg-white text-blue-600 shadow-sm'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200/50'
                     }
@@ -129,6 +153,46 @@ export default function App() {
                   {tool.label}
                 </button>
               ))}
+            </nav>
+
+            {/* Info Pages Navigation */}
+            <nav className="hidden md:flex items-center gap-1 ml-4 pl-4 border-l border-gray-200">
+              <button
+                onClick={() => handleInfoPageClick('privacy')}
+                className={`
+                  px-3 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-all duration-200
+                  ${showInfoPage === 'privacy'
+                    ? 'bg-white text-blue-600 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200/50'
+                  }
+                `}
+              >
+                Privacy
+              </button>
+              <button
+                onClick={() => handleInfoPageClick('terms')}
+                className={`
+                  px-3 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-all duration-200
+                  ${showInfoPage === 'terms'
+                    ? 'bg-white text-blue-600 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200/50'
+                  }
+                `}
+              >
+                Terms
+              </button>
+              <button
+                onClick={() => handleInfoPageClick('contact')}
+                className={`
+                  px-3 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-all duration-200
+                  ${showInfoPage === 'contact'
+                    ? 'bg-white text-blue-600 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-200/50'
+                  }
+                `}
+              >
+                Contact
+              </button>
             </nav>
 
             {/* Mobile Menu Button */}
@@ -249,7 +313,7 @@ export default function App() {
               className={`
                 flex-shrink-0 px-4 py-3 rounded-xl font-medium text-sm whitespace-nowrap
                 transition-all duration-200 flex items-center gap-2
-                ${activeTab === tool.id
+                ${activeTab === tool.id && !showInfoPage
                   ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md'
                   : 'bg-white text-gray-600 shadow-sm border border-gray-100 hover:bg-gray-50'
                 }
@@ -259,6 +323,46 @@ export default function App() {
               {tool.label}
             </button>
           ))}
+          {/* Info pages in mobile nav */}
+          <button
+            onClick={() => handleInfoPageClick('privacy')}
+            className={`
+              flex-shrink-0 px-4 py-3 rounded-xl font-medium text-sm whitespace-nowrap
+              transition-all duration-200 flex items-center gap-2
+              ${showInfoPage === 'privacy'
+                ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md'
+                : 'bg-white text-gray-600 shadow-sm border border-gray-100 hover:bg-gray-50'
+              }
+            `}
+          >
+            Privacy
+          </button>
+          <button
+            onClick={() => handleInfoPageClick('terms')}
+            className={`
+              flex-shrink-0 px-4 py-3 rounded-xl font-medium text-sm whitespace-nowrap
+              transition-all duration-200 flex items-center gap-2
+              ${showInfoPage === 'terms'
+                ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md'
+                : 'bg-white text-gray-600 shadow-sm border border-gray-100 hover:bg-gray-50'
+              }
+            `}
+          >
+            Terms
+          </button>
+          <button
+            onClick={() => handleInfoPageClick('contact')}
+            className={`
+              flex-shrink-0 px-4 py-3 rounded-xl font-medium text-sm whitespace-nowrap
+              transition-all duration-200 flex items-center gap-2
+              ${showInfoPage === 'contact'
+                ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md'
+                : 'bg-white text-gray-600 shadow-sm border border-gray-100 hover:bg-gray-50'
+              }
+            `}
+          >
+            Contact
+          </button>
         </nav>
       </div>
 
@@ -270,7 +374,7 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <Footer />
+      <Footer onNavigate={handleInfoPageClick} />
     </div>
   );
 }
