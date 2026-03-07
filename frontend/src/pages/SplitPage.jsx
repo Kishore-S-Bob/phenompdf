@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SingleDropZone from '../components/SingleDropZone';
 import PdfPreview from '../components/PdfPreview';
 import LoadingOverlay from '../components/LoadingOverlay';
@@ -11,6 +11,10 @@ export default function SplitPage() {
   const [endPage, setEndPage] = useState('');
   const [isSplitting, setIsSplitting] = useState(false);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    document.title = 'Split PDF – PhenomPDF';
+  }, []);
 
   const handleFileAdded = (newFile) => {
     setFile(newFile);
@@ -108,7 +112,7 @@ export default function SplitPage() {
 
       <div className="text-center mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-          Split PDF File
+          Split PDF Files Easily
         </h1>
         <p className="text-gray-500">
           Extract specific pages from a PDF file

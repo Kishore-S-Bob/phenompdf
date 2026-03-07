@@ -1,4 +1,10 @@
+import { useEffect } from 'react';
+
 export default function TermsPage() {
+  useEffect(() => {
+    document.title = 'Terms of Service – PhenomPDF';
+  }, []);
+
   return (
     <div className="max-w-3xl mx-auto">
       <div className="text-center mb-8">

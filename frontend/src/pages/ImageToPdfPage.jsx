@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import LoadingOverlay from '../components/LoadingOverlay';
 import { API_BASE } from '../api';
 
@@ -10,6 +10,10 @@ export default function ImageToPdfPage() {
   const [isDragging, setIsDragging] = useState(false);
   const [dragIndex, setDragIndex] = useState(null);
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    document.title = 'Image to PDF – PhenomPDF';
+  }, []);
 
   const ALLOWED_TYPES = ['image/png', 'image/jpeg', 'image/jpg'];
 
@@ -160,7 +164,7 @@ export default function ImageToPdfPage() {
 
       <div className="text-center mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-          Image to PDF
+          Image to PDF Converter
         </h1>
         <p className="text-gray-500">
           Upload images and convert them to a single PDF

@@ -1,9 +1,15 @@
+import { useEffect } from 'react';
+
 export default function ContactPage() {
+  useEffect(() => {
+    document.title = 'Contact – PhenomPDF';
+  }, []);
+
   return (
     <div className="max-w-3xl mx-auto">
       <div className="text-center mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-          PhenomPDF
+          Contact Us
         </h1>
       </div>
 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SingleDropZone from '../components/SingleDropZone';
 import LoadingOverlay from '../components/LoadingOverlay';
 import { API_BASE } from '../api';
@@ -9,6 +9,10 @@ export default function ProtectPage() {
   const [isProtecting, setIsProtecting] = useState(false);
   const [error, setError] = useState(null);
   const [protectedFile, setProtectedFile] = useState(null);
+
+  useEffect(() => {
+    document.title = 'Protect PDF – PhenomPDF';
+  }, []);
 
   const handleFileAdded = (newFile) => {
     setFile(newFile);
@@ -78,7 +82,7 @@ export default function ProtectPage() {
 
       <div className="text-center mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-          Protect PDF
+          Protect PDF with Password
         </h1>
         <p className="text-gray-500">
           Add password protection to your PDF file

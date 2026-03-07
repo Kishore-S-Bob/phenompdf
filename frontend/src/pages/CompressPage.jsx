@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SingleDropZone from '../components/SingleDropZone';
 import LoadingOverlay from '../components/LoadingOverlay';
 import { API_BASE } from '../api';
@@ -10,6 +10,10 @@ export default function CompressPage() {
   const [compressedFile, setCompressedFile] = useState(null);
   const [originalSize, setOriginalSize] = useState(null);
   const [compressedSize, setCompressedSize] = useState(null);
+
+  useEffect(() => {
+    document.title = 'Compress PDF – PhenomPDF';
+  }, []);
 
   const handleFileAdded = (newFile) => {
     setFile(newFile);
@@ -91,7 +95,7 @@ export default function CompressPage() {
 
       <div className="text-center mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-          Compress PDF
+          Compress PDF Files
         </h1>
         <p className="text-gray-500">
           Reduce PDF file size while maintaining quality

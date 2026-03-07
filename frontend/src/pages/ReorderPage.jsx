@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import SingleDropZone from '../components/SingleDropZone';
@@ -79,6 +79,10 @@ export default function ReorderPage() {
   const [isReordering, setIsReordering] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    document.title = 'Reorder PDF – PhenomPDF';
+  }, []);
 
   const handleFileAdded = async (newFile) => {
     setFile(newFile);
@@ -202,7 +206,7 @@ export default function ReorderPage() {
 
       <div className="text-center mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-          Reorder PDF Pages
+          Reorder PDF Pages Online
         </h1>
         <p className="text-gray-500">
           Upload a PDF and drag pages to reorder them

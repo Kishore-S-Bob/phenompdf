@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import DropZone from '../components/DropZone';
 import FileList from '../components/FileList';
 import LoadingOverlay from '../components/LoadingOverlay';
@@ -8,6 +8,10 @@ export default function MergePage() {
   const [files, setFiles] = useState([]);
   const [isMerging, setIsMerging] = useState(false);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    document.title = 'Merge PDF – PhenomPDF';
+  }, []);
 
   const handleFilesAdded = (newFiles) => {
     setFiles((prev) => [...prev, ...newFiles]);
@@ -78,7 +82,7 @@ export default function MergePage() {
 
       <div className="text-center mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-          Merge PDF Files
+          Merge PDF Files Online
         </h1>
         <p className="text-gray-500">
           Upload multiple PDFs and merge them into a single file

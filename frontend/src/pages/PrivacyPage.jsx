@@ -1,4 +1,10 @@
+import { useEffect } from 'react';
+
 export default function PrivacyPage() {
+  useEffect(() => {
+    document.title = 'Privacy Policy – PhenomPDF';
+  }, []);
+
   return (
     <div className="max-w-3xl mx-auto">
       <div className="text-center mb-8">
