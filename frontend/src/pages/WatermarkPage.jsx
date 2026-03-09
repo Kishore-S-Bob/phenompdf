@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import SingleDropZone from '../components/SingleDropZone';
 import LoadingOverlay from '../components/LoadingOverlay';
 import * as pdfjsLib from 'pdfjs-dist';
+import { API_BASE } from '../api';
 
 // Configure PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc =
@@ -177,56 +178,29 @@ export default function WatermarkPage() {
     setWatermarkedFile(null);
 
     try {
-      const { PDFDocument, rgb } = await import('pdf-lib');
-      
-      // Read the original PDF
-      const arrayBuffer = await file.arrayBuffer();
-      const pdfLibDoc = await PDFDocument.load(arrayBuffer);
-      
-      const pages = pdfLibDoc.getPages();
-      const font = await pdfLibDoc.embedFont(pdfLibDoc.StandardFonts.Helvetica);
-      
-      // Get the canvas dimensions for positioning
-      const canvas = canvasRef.current;
-      const pageWidth = pages[0].getWidth();
-      const pageHeight = pages[0].getHeight();
-      
-      // Calculate scale ratio between canvas and actual PDF
-      const scaleX = pageWidth / canvas.width;
-      const scaleY = pageHeight / canvas.height;
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('text', watermarkText);
+      formData.append('position', 'center');
+      formData.append('size', fontSize.toString());
+      formData.append('rotation', rotation.toString());
+      formData.append('opacity', (opacity / 100).toString());
 
-      // Add watermark to all pages
-      for (const page of pages) {
-        const { height } = page.getSize();
-        
-        // Convert canvas position to PDF position
-        const pdfX = watermarkPosition.x * scaleX;
-        const pdfY = height - (watermarkPosition.y * scaleY) - (fontSize * scaleY);
-        
-        // Convert font size
-        const pdfFontSize = fontSize * Math.min(scaleX, scaleY);
-        
-        // Convert opacity (0-100 to 0-1)
-        const pdfOpacity = opacity / 100;
-        
-        // Draw the watermark
-        page.drawText(watermarkText, {
-          x: pdfX,
-          y: pdfY,
-          size: pdfFontSize,
-          font: font,
-          color: rgb(0, 0, 0),
-          opacity: pdfOpacity,
-          rotate: (rotation * Math.PI) / 180,
-        });
+      const response = await fetch(`${API_BASE}/watermark`, {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
       }
 
-      const pdfBytes = await pdfLibDoc.save();
-      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const blob = await response.blob();
       setWatermarkedFile(blob);
     } catch (err) {
       console.error('Watermark error:', err);
-      setError('Failed to apply watermark. Please try again.');
+      setError(err.message || 'Failed to apply watermark. Please try again.');
     } finally {
       setIsProcessing(false);
     }
