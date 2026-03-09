@@ -1,10 +1,14 @@
-import { useState, useEffect, useCallback } from 'react';
-import { API_BASE } from '../api';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import * as pdfjsLib from 'pdfjs-dist';
 
-export default function PdfPreview({ file, onTotalPagesChange, maxSize = 200 }) {
+// Set up PDF.js worker
+pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.min.js`;
+
+export default function PdfPreview({ file, onTotalPagesChange, maxSize = 200, rotation = 0 }) {
   const [thumbnails, setThumbnails] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const pdfDocRef = useRef(null);
 
   const handleTotalPagesChange = useCallback((pages) => {
     if (onTotalPagesChange) {
@@ -12,42 +16,103 @@ export default function PdfPreview({ file, onTotalPagesChange, maxSize = 200 }) 
     }
   }, [onTotalPagesChange]);
 
+  const renderPage = async (pdf, pageNum, scale) => {
+    try {
+      const page = await pdf.getPage(pageNum);
+      
+      // Create viewport with rotation
+      const viewport = page.getViewport({
+        scale: scale,
+        rotation: rotation
+      });
+
+      // Create canvas
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+
+      // Render PDF page to canvas
+      const renderContext = {
+        canvasContext: context,
+        viewport: viewport
+      };
+
+      await page.render(renderContext).promise;
+
+      // Convert canvas to data URL
+      return canvas.toDataURL('image/jpeg', 0.85);
+    } catch (err) {
+      console.error(`Error rendering page ${pageNum}:`, err);
+      return null;
+    }
+  };
+
+  const generateThumbnails = async (pdf) => {
+    const total = pdf.numPages;
+    const newThumbnails = [];
+
+    // Calculate scale to fit within maxSize while maintaining aspect ratio
+    // We'll render first page to get dimensions, then calculate appropriate scale
+    try {
+      const firstPage = await pdf.getPage(1);
+      const baseViewport = firstPage.getViewport({ scale: 1, rotation: rotation });
+      
+      let scale;
+      if (baseViewport.width > baseViewport.height) {
+        scale = maxSize / baseViewport.width;
+      } else {
+        scale = maxSize / baseViewport.height;
+      }
+
+      // Render all pages
+      for (let i = 1; i <= total; i++) {
+        const imageUrl = await renderPage(pdf, i, scale);
+        if (imageUrl) {
+          newThumbnails.push({
+            page_number: i,
+            image: imageUrl
+          });
+        }
+      }
+
+      setThumbnails(newThumbnails);
+      handleTotalPagesChange(total);
+    } catch (err) {
+      setError(err.message || 'Failed to generate thumbnails');
+      setThumbnails([]);
+      handleTotalPagesChange(0);
+    }
+  };
+
   useEffect(() => {
     if (!file) {
       setThumbnails([]);
       setError(null);
       handleTotalPagesChange(0);
+      if (pdfDocRef.current) {
+        pdfDocRef.current = null;
+      }
       return;
     }
 
-    const fetchPreviews = async () => {
+    const loadPdf = async () => {
       setIsLoading(true);
       setError(null);
 
       try {
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('max_size', maxSize);
-
-        const response = await fetch(`${API_BASE}/pdf-preview`, {
-          method: 'POST',
-          body: formData,
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.detail || 'Failed to generate preview');
-        }
-
-        const data = await response.json();
-        setThumbnails(data.thumbnails);
-        handleTotalPagesChange(data.total_pages);
+        // Load file as array buffer
+        const arrayBuffer = await file.arrayBuffer();
+        
+        // Load PDF document
+        const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+        const pdf = await loadingTask.promise;
+        
+        pdfDocRef.current = pdf;
+        
+        await generateThumbnails(pdf);
       } catch (err) {
-        if (err.name === 'TypeError') {
-          setError('Unable to connect to the server. Please make sure the backend is running on http://localhost:8000');
-        } else {
-          setError(err.message);
-        }
+        setError(err.message || 'Failed to load PDF');
         setThumbnails([]);
         handleTotalPagesChange(0);
       } finally {
@@ -55,8 +120,23 @@ export default function PdfPreview({ file, onTotalPagesChange, maxSize = 200 }) 
       }
     };
 
-    fetchPreviews();
+    loadPdf();
+
+    return () => {
+      if (pdfDocRef.current) {
+        pdfDocRef.current = null;
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file, maxSize, handleTotalPagesChange]);
+
+  // Re-render thumbnails when rotation changes
+  useEffect(() => {
+    if (pdfDocRef.current && !isLoading) {
+      generateThumbnails(pdfDocRef.current);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rotation]);
 
   if (!file) {
     return null;
@@ -97,7 +177,7 @@ export default function PdfPreview({ file, onTotalPagesChange, maxSize = 200 }) 
         >
           <div
             className="w-full flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100"
-            style={{ aspectRatio: '0.707' }}
+            style={{ aspectRatio: rotation % 180 !== 0 ? '1.414' : '0.707' }}
           >
             <img
               src={thumbnail.image}

@@ -106,7 +106,7 @@ export default function RotatePage() {
           <h3 className="text-lg font-semibold text-gray-800 mb-4">
             Page Previews ({totalPages} pages)
           </h3>
-          <PdfPreview file={file} onTotalPagesChange={handleTotalPagesChange} />
+          <PdfPreview file={file} onTotalPagesChange={handleTotalPagesChange} rotation={angle} />
         </div>
       )}
 
