@@ -549,7 +549,8 @@ async def unlock_pdf(
 @app.post("/rotate")
 async def rotate_pdf(
     file: UploadFile = File(...),
-    angle: int = Form(...)
+    angle: int = Form(...),
+    pages: str = Form(default="")
 ):
     if not file:
         raise HTTPException(status_code=400, detail="No file provided")
@@ -568,10 +569,32 @@ async def rotate_pdf(
         file_obj = io.BytesIO(content)
         reader = PdfReader(file_obj)
         writer = PdfWriter()
+        total_pages = len(reader.pages)
 
-        for page in reader.pages:
-            # Rotate the page by the specified angle
-            page.rotate(angle)
+        # Parse pages parameter
+        pages_to_rotate = []
+        if pages and pages.strip():
+            try:
+                page_nums = [p.strip() for p in pages.split(",")]
+                for p in page_nums:
+                    if p:
+                        page_num = int(p)
+                        if page_num < 1 or page_num > total_pages:
+                            raise HTTPException(
+                                status_code=400,
+                                detail=f"Page {page_num} is out of range (1-{total_pages})"
+                            )
+                        pages_to_rotate.append(page_num - 1)  # Convert to 0-indexed
+            except ValueError:
+                raise HTTPException(
+                    status_code=400,
+                    detail="Invalid page numbers format. Use comma-separated numbers (e.g., 1,3,5)"
+                )
+
+        # Rotate pages
+        for i, page in enumerate(reader.pages):
+            if not pages_to_rotate or i in pages_to_rotate:
+                page.rotate(angle)
             writer.add_page(page)
 
         output = io.BytesIO()

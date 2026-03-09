@@ -8,6 +8,8 @@ export default function RotatePage() {
   const [file, setFile] = useState(null);
   const [totalPages, setTotalPages] = useState(0);
   const [angle, setAngle] = useState(90);
+  const [pageSelectionMode, setPageSelectionMode] = useState('all');
+  const [specificPages, setSpecificPages] = useState('');
   const [isRotating, setIsRotating] = useState(false);
   const [error, setError] = useState(null);
 
@@ -18,6 +20,8 @@ export default function RotatePage() {
   const handleFileAdded = (newFile) => {
     setFile(newFile);
     setTotalPages(0);
+    setSpecificPages('');
+    setPageSelectionMode('all');
     setError(null);
   };
 
@@ -31,6 +35,11 @@ export default function RotatePage() {
       return;
     }
 
+    if (pageSelectionMode === 'specific' && !specificPages.trim()) {
+      setError('Please enter page numbers to rotate');
+      return;
+    }
+
     setIsRotating(true);
     setError(null);
 
@@ -38,6 +47,10 @@ export default function RotatePage() {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('angle', angle);
+      
+      if (pageSelectionMode === 'specific') {
+        formData.append('pages', specificPages);
+      }
 
       const response = await fetch(`${API_BASE}/rotate`, {
         method: 'POST',
@@ -69,7 +82,7 @@ export default function RotatePage() {
     }
   };
 
-  const isFormValid = file;
+  const isFormValid = file && (pageSelectionMode === 'all' || specificPages.trim());
 
   return (
     <>
@@ -80,7 +93,7 @@ export default function RotatePage() {
           Rotate PDF Files Easily
         </h1>
         <p className="text-gray-500">
-          Rotate your PDF pages by 90°, 180°, or 270°
+          Rotate all pages or specific pages by 90°, 180°, or 270°
         </p>
       </div>
 
@@ -94,6 +107,58 @@ export default function RotatePage() {
             Page Previews ({totalPages} pages)
           </h3>
           <PdfPreview file={file} onTotalPagesChange={handleTotalPagesChange} />
+        </div>
+      )}
+
+      {file && (
+        <div className="bg-white rounded-2xl shadow-lg shadow-gray-200/50 border border-gray-100 p-6 mb-6">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">
+            Page Selection
+          </h3>
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <button
+              onClick={() => setPageSelectionMode('all')}
+              className={`
+                py-3 px-4 rounded-xl font-medium transition-all duration-300
+                ${pageSelectionMode === 'all'
+                  ? 'bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-600 text-white shadow-lg shadow-purple-500/25'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }
+              `}
+            >
+              All Pages
+            </button>
+            <button
+              onClick={() => setPageSelectionMode('specific')}
+              className={`
+                py-3 px-4 rounded-xl font-medium transition-all duration-300
+                ${pageSelectionMode === 'specific'
+                  ? 'bg-gradient-to-r from-blue-500 via-purple-500 to-indigo-600 text-white shadow-lg shadow-purple-500/25'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }
+              `}
+            >
+              Specific Pages
+            </button>
+          </div>
+
+          {pageSelectionMode === 'specific' && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Page Numbers (comma-separated)
+              </label>
+              <input
+                type="text"
+                value={specificPages}
+                onChange={(e) => setSpecificPages(e.target.value)}
+                placeholder="e.g., 1,3,5"
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+              />
+              <p className="text-xs text-gray-500 mt-2">
+                Enter page numbers separated by commas (e.g., 1,3,5)
+              </p>
+            </div>
+          )}
         </div>
       )}
 
