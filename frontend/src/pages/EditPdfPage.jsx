@@ -5,7 +5,8 @@ import LoadingOverlay from '../components/LoadingOverlay';
 import { API_BASE } from '../api';
 
 // Configure PDF.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
 export default function EditPdfPage() {
   const [pdfFile, setPdfFile] = useState(null);
