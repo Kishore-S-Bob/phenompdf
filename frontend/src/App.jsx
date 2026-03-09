@@ -129,7 +129,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20">
+    <div className="w-full min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20">
       {/* Navigation Bar */}
       <header className="bg-white/80 backdrop-blur-xl border-b border-gray-200/80 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -202,7 +202,7 @@ export default function App() {
       </div>
 
       {/* Tool Cards Grid */}
-      <div className="w-full max-w-6xl mx-auto px-4 py-10 md:py-14 -mt-8 relative z-10">
+      <div className="w-full max-w-7xl mx-auto px-4 py-10 md:py-14 -mt-8 relative z-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {tools.map((tool) => {
             const IconComponent = tool.icon;
@@ -306,7 +306,7 @@ export default function App() {
       </div>
 
       {/* Main Content */}
-      <main className="flex-1 w-full max-w-6xl mx-auto px-4 pb-12">
+      <main className="flex-1 w-full max-w-7xl mx-auto px-4 pb-12">
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
           {renderPage()}
         </div>
