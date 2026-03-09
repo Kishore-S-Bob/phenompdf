@@ -620,7 +620,10 @@ async def rotate_pdf(
 async def watermark_pdf(
     file: UploadFile = File(...),
     text: str = Form(...),
-    position: str = Form(default="center")
+    position: str = Form(default="center"),
+    size: int = Form(default=48),
+    rotation: int = Form(default=0),
+    opacity: float = Form(default=0.3)
 ):
     if not file:
         raise HTTPException(status_code=400, detail="No file provided")
@@ -641,6 +644,27 @@ async def watermark_pdf(
             detail=f"Invalid position. Must be one of: {', '.join(valid_positions)}"
         )
 
+    # Validate size parameter (12-120 range)
+    if size < 12 or size > 120:
+        raise HTTPException(
+            status_code=400,
+            detail="Font size must be between 12 and 120"
+        )
+
+    # Validate rotation parameter (0-360 range)
+    if rotation < 0 or rotation > 360:
+        raise HTTPException(
+            status_code=400,
+            detail="Rotation must be between 0 and 360 degrees"
+        )
+
+    # Validate opacity parameter (0.0-1.0 range)
+    if opacity < 0.0 or opacity > 1.0:
+        raise HTTPException(
+            status_code=400,
+            detail="Opacity must be between 0.0 and 1.0"
+        )
+
     try:
         content = await file.read()
         file_obj = io.BytesIO(content)
@@ -659,12 +683,15 @@ async def watermark_pdf(
             c = canvas.Canvas(watermark_buffer, pagesize=(page_width, page_height))
 
             # Set watermark text properties
-            c.setFont("Helvetica", 48)
-            c.setFillColorRGB(0, 0, 0, alpha=0.3)  # Black with 30% opacity
+            c.setFont("Helvetica", size)
+            c.setFillColorRGB(0, 0, 0, alpha=opacity)  # Black with specified opacity
+
+            # Save the canvas state before rotation
+            c.saveState()
 
             # Calculate text width for positioning
-            text_width = c.stringWidth(text, "Helvetica", 48)
-            text_height = 48
+            text_width = c.stringWidth(text, "Helvetica", size)
+            text_height = size
 
             # Calculate position based on selection
             if position == "center":
@@ -683,8 +710,36 @@ async def watermark_pdf(
                 x = page_width - text_width - 20
                 y = 20
 
+            # Apply rotation if specified
+            if rotation != 0:
+                # Calculate center point for rotation based on position
+                if position == "center":
+                    center_x = page_width / 2
+                    center_y = page_height / 2
+                elif position == "top-left":
+                    center_x = x + text_width / 2
+                    center_y = y + text_height / 2
+                elif position == "top-right":
+                    center_x = x + text_width / 2
+                    center_y = y + text_height / 2
+                elif position == "bottom-left":
+                    center_x = x + text_width / 2
+                    center_y = y + text_height / 2
+                elif position == "bottom-right":
+                    center_x = x + text_width / 2
+                    center_y = y + text_height / 2
+
+                # Translate to center, rotate, then translate back
+                c.translate(center_x, center_y)
+                c.rotate(rotation)
+                c.translate(-center_x, -center_y)
+
             # Draw the watermark text
             c.drawString(x, y, text)
+
+            # Restore canvas state
+            c.restoreState()
+
             c.save()
             watermark_buffer.seek(0)
 
@@ -710,6 +765,9 @@ async def watermark_pdf(
     except HTTPException:
         raise
     except Exception as e:
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"Watermark error: {str(e)}\n{error_details}")
         raise HTTPException(status_code=500, detail=f"Error adding watermark: {str(e)}")
 
 
