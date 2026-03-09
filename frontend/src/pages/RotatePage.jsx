@@ -7,7 +7,7 @@ import { API_BASE } from '../api';
 export default function RotatePage() {
   const [file, setFile] = useState(null);
   const [totalPages, setTotalPages] = useState(0);
-  const [angle, setAngle] = useState(90);
+  const [angle, setAngle] = useState(0);
   const [pageSelectionMode, setPageSelectionMode] = useState('all');
   const [specificPages, setSpecificPages] = useState('');
   const [isRotating, setIsRotating] = useState(false);
@@ -168,7 +168,7 @@ export default function RotatePage() {
             Rotation Angle
           </h3>
           <div className="flex items-center justify-center gap-4">
-            {[90, 180, 270].map((angleOption) => (
+            {[0, 90, 180, 270].map((angleOption) => (
               <button
                 key={angleOption}
                 onClick={() => setAngle(angleOption)}
