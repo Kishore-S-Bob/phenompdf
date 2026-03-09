@@ -1,6 +1,8 @@
 # PhenomPDF
 
-A web application that allows users to upload multiple PDF files via drag-and-drop, merge them in any order, and download the merged result.
+A professional web application that allows users to upload multiple PDF files via drag-and-drop, merge them in any order, and download the merged result.
+
+![PhenomPDF Logo](frontend/public/logo.svg)
 
 ## Tech Stack
 
@@ -12,8 +14,23 @@ A web application that allows users to upload multiple PDF files via drag-and-dr
 ```
 pdf/
 ├── frontend/       # React frontend application
+│   ├── public/      # Static assets (logos, favicon)
+│   ├── src/
+│   │   ├── components/  # Reusable React components
+│   │   └── pages/      # Page components
+│   └── package.json
 └── backend/        # FastAPI backend application
 ```
+
+## Brand Assets
+
+PhenomPDF includes a comprehensive set of logo assets:
+
+- **Logo Variants**: Horizontal, square, and icon versions in SVG format
+- **React Component**: `<Logo />` component for easy integration
+- **Favicon**: Browser-ready favicon matching the brand
+
+See [LOGO_SHOWCASE.md](LOGO_SHOWCASE.md) for detailed logo specifications and usage guidelines.
 
 ## Getting Started
 

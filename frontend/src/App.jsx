@@ -11,6 +11,7 @@ import PrivacyPage from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
 import ContactPage from './pages/ContactPage';
 import Footer from './components/Footer';
+import Logo from './components/Logo';
 
 // Tool Icons as components for better styling control
 const MergeIcon = () => (
@@ -125,15 +126,18 @@ export default function App() {
           <div className="flex justify-between items-center h-20">
             {/* Brand Name */}
             <div
-              className="flex flex-col cursor-pointer group"
+              className="flex items-center gap-3 cursor-pointer group"
               onClick={handleHomeClick}
             >
-              <h1 className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent tracking-tight group-hover:from-blue-500 group-hover:via-purple-500 group-hover:to-indigo-500 transition-all">
-                PhenomPDF
-              </h1>
-              <span className="text-xs text-gray-500 font-medium -mt-1">
-                Professional PDF Toolkit
-              </span>
+              <Logo size="medium" className="transition-transform group-hover:scale-110" />
+              <div className="flex flex-col">
+                <h1 className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent tracking-tight group-hover:from-blue-500 group-hover:via-purple-500 group-hover:to-indigo-500 transition-all">
+                  PhenomPDF
+                </h1>
+                <span className="text-xs text-gray-500 font-medium -mt-1">
+                  Professional PDF Toolkit
+                </span>
+              </div>
             </div>
 
             {/* Desktop Navigation - All 8 tools visible */}
@@ -171,6 +175,11 @@ export default function App() {
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSIyIi8+PC9nPjwvZz48L3N2Zz4=')] opacity-30" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
           <div className="text-center">
+            <div className="flex justify-center mb-6">
+              <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 shadow-2xl">
+                <Logo size="large" />
+              </div>
+            </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
               PhenomPDF
             </h2>

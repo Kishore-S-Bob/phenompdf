@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
   <defs>
-    <linearGradient id="faviconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="iconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#2563EB" />
       <stop offset="50%" stop-color="#9333EA" />
       <stop offset="100%" stop-color="#4F46E5" />
@@ -8,7 +8,7 @@
   </defs>
 
   <!-- Document Shape -->
-  <path d="M16 4 L40 4 L48 12 L48 60 L16 60 Z" fill="url(#faviconGradient)" />
+  <path d="M16 4 L40 4 L48 12 L48 60 L16 60 Z" fill="url(#iconGradient)" />
   
   <!-- Folded Corner -->
   <path d="M40 4 L40 12 L48 12" fill="#1E40AF" opacity="0.5" />
@@ -21,5 +21,5 @@
   
   <!-- PDF Badge -->
   <rect x="20" y="44" width="24" height="10" rx="2" fill="white" />
-  <text x="32" y="51.5" font-family="Arial, sans-serif" font-size="7" font-weight="bold" fill="url(#faviconGradient)" text-anchor="middle">PDF</text>
+  <text x="32" y="51.5" font-family="Arial, sans-serif" font-size="7" font-weight="bold" fill="url(#iconGradient)" text-anchor="middle">PDF</text>
 </svg>
