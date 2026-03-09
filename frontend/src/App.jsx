@@ -132,7 +132,7 @@ export default function App() {
     <div className="w-full min-h-screen flex flex-col bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20">
       {/* Navigation Bar */}
       <header className="bg-white/80 backdrop-blur-xl border-b border-gray-200/80 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             {/* Brand Name */}
             <div
@@ -283,8 +283,8 @@ export default function App() {
       </div>
 
       {/* Mobile Navigation - Horizontal Scroll */}
-      <div className="md:hidden max-w-7xl mx-auto px-4 sm:px-6 -mt-4 mb-8">
-        <nav className="flex gap-4 overflow-x-auto whitespace-nowrap scrollbar-hide -mx-4 px-4">
+      <div className="md:hidden w-full max-w-7xl mx-auto px-4 sm:px-6 -mt-4 mb-8">
+        <nav className="flex gap-3 overflow-x-auto whitespace-nowrap scrollbar-hide -mx-4 px-4">
           {tools.map((tool) => (
             <button
               key={tool.id}

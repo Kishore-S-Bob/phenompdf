@@ -6,7 +6,7 @@ export default function ContactPage() {
   }, []);
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="w-full max-w-3xl mx-auto">
       <div className="text-center mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
           Contact Us
