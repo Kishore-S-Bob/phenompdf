@@ -103,13 +103,13 @@ export default function PdfPreview({ file, onTotalPagesChange, maxSize = 200, ro
       try {
         // Load file as array buffer
         const arrayBuffer = await file.arrayBuffer();
-        
+
         // Load PDF document
         const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
         const pdf = await loadingTask.promise;
-        
+
         pdfDocRef.current = pdf;
-        
+
         await generateThumbnails(pdf);
       } catch (err) {
         setError(err.message || 'Failed to load PDF');
@@ -127,16 +127,7 @@ export default function PdfPreview({ file, onTotalPagesChange, maxSize = 200, ro
         pdfDocRef.current = null;
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [file, maxSize, handleTotalPagesChange]);
-
-  // Re-render thumbnails when rotation changes
-  useEffect(() => {
-    if (pdfDocRef.current && !isLoading) {
-      generateThumbnails(pdfDocRef.current);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rotation]);
+  }, [file, maxSize, rotation, handleTotalPagesChange]);
 
   if (!file) {
     return null;
@@ -177,7 +168,7 @@ export default function PdfPreview({ file, onTotalPagesChange, maxSize = 200, ro
         >
           <div
             className="w-full flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100"
-            style={{ aspectRatio: rotation % 180 !== 0 ? '1.414' : '0.707' }}
+            style={{ aspectRatio: rotation === 90 || rotation === 270 ? '1.414' : '0.707' }}
           >
             <img
               src={thumbnail.image}
