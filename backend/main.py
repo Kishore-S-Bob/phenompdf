@@ -546,6 +546,51 @@ async def unlock_pdf(
         raise HTTPException(status_code=500, detail=f"Error unlocking PDF: {str(e)}")
 
 
+@app.post("/rotate")
+async def rotate_pdf(
+    file: UploadFile = File(...),
+    angle: int = Form(...)
+):
+    if not file:
+        raise HTTPException(status_code=400, detail="No file provided")
+
+    if not file.filename.lower().endswith(".pdf"):
+        raise HTTPException(
+            status_code=400,
+            detail=f"File {file.filename} is not a PDF"
+        )
+
+    if angle not in [90, 180, 270]:
+        raise HTTPException(status_code=400, detail="Rotation angle must be 90, 180, or 270 degrees")
+
+    try:
+        content = await file.read()
+        file_obj = io.BytesIO(content)
+        reader = PdfReader(file_obj)
+        writer = PdfWriter()
+
+        for page in reader.pages:
+            # Rotate the page by the specified angle
+            page.rotate(angle)
+            writer.add_page(page)
+
+        output = io.BytesIO()
+        writer.write(output)
+        output.seek(0)
+
+        return StreamingResponse(
+            iter([output.getvalue()]),
+            media_type="application/pdf",
+            headers={
+                "Content-Disposition": f"attachment; filename=rotated_{file.filename}"
+            }
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error rotating PDF: {str(e)}")
+
+
 @app.get("/health")
 async def health_check():
     return {"status": "ok"}

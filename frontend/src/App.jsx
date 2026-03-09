@@ -8,6 +8,7 @@ import ReorderPage from './pages/ReorderPage';
 import ProtectPage from './pages/ProtectPage';
 import UnlockPage from './pages/UnlockPage';
 import EditPdfPage from './pages/EditPdfPage';
+import RotatePage from './pages/RotatePage';
 import PrivacyPage from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
 import ContactPage from './pages/ContactPage';
@@ -72,6 +73,12 @@ const EditPdfIcon = () => (
   </svg>
 );
 
+const RotateIcon = () => (
+  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+  </svg>
+);
+
 export default function App() {
   const [activeTab, setActiveTab] = useState('merge');
   const [showInfoPage, setShowInfoPage] = useState(null);
@@ -85,6 +92,7 @@ export default function App() {
     { id: 'reorder', label: 'Reorder PDF', description: 'Rearrange pages in your PDF', icon: ReorderIcon },
     { id: 'protect', label: 'Protect PDF', description: 'Add password protection', icon: ProtectIcon },
     { id: 'unlock', label: 'Unlock PDF', description: 'Remove password protection', icon: UnlockIcon },
+    { id: 'rotate', label: 'Rotate PDF', description: 'Rotate pages in your PDF', icon: RotateIcon },
     { id: 'edit-pdf', label: 'Edit PDF', description: 'Add text, highlights and annotations', icon: EditPdfIcon },
   ];
 
@@ -123,6 +131,7 @@ export default function App() {
       case 'reorder': return <ReorderPage />;
       case 'protect': return <ProtectPage />;
       case 'unlock': return <UnlockPage />;
+      case 'rotate': return <RotatePage />;
       case 'edit-pdf': return <EditPdfPage />;
       default: return <MergePage />;
     }
