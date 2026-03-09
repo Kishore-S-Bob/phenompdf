@@ -277,101 +277,6 @@ export default function WatermarkPage() {
 
       {file && pdfDoc && (
         <div className="space-y-6">
-          {/* Watermark Controls */}
-          <div className="bg-white rounded-2xl shadow-lg shadow-gray-200/50 border border-gray-100 p-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">Watermark Settings</h3>
-            
-            {/* Text Input */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Watermark Text
-              </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  value={watermarkText}
-                  onChange={(e) => setWatermarkText(e.target.value)}
-                  placeholder="Enter watermark text"
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                />
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-
-            {/* Font Size Slider */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Font Size: {fontSize}px
-              </label>
-              <input
-                type="range"
-                min="12"
-                max="120"
-                value={fontSize}
-                onChange={(e) => setFontSize(parseInt(e.target.value))}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-500"
-              />
-            </div>
-
-            {/* Opacity Slider */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Opacity: {opacity}%
-              </label>
-              <input
-                type="range"
-                min="0"
-                max="100"
-                value={opacity}
-                onChange={(e) => setOpacity(parseInt(e.target.value))}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-500"
-              />
-            </div>
-
-            {/* Rotation Slider */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Rotation: {rotation}°
-              </label>
-              <input
-                type="range"
-                min="0"
-                max="360"
-                value={rotation}
-                onChange={(e) => setRotation(parseInt(e.target.value))}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-500"
-              />
-            </div>
-
-            {/* Presets */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
-                Quick Presets
-              </label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {presets.map((preset) => (
-                  <button
-                    key={preset.id}
-                    onClick={() => handlePresetClick(preset.rotation)}
-                    className={`
-                      px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200
-                      ${rotation === preset.rotation
-                        ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                      }
-                    `}
-                  >
-                    {preset.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
           {/* PDF Preview with Watermark */}
           <div className="bg-white rounded-2xl shadow-lg shadow-gray-200/50 border border-gray-100 p-6">
             <div className="flex items-center justify-between mb-4">
@@ -480,6 +385,101 @@ export default function WatermarkPage() {
                 </span>
               </div>
             )}
+          </div>
+
+          {/* Watermark Controls */}
+          <div className="bg-white rounded-2xl shadow-lg shadow-gray-200/50 border border-gray-100 p-6">
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">Watermark Settings</h3>
+            
+            {/* Text Input */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Watermark Text
+              </label>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={watermarkText}
+                  onChange={(e) => setWatermarkText(e.target.value)}
+                  placeholder="Enter watermark text"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                />
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            {/* Font Size Slider */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Font Size: {fontSize}px
+              </label>
+              <input
+                type="range"
+                min="12"
+                max="120"
+                value={fontSize}
+                onChange={(e) => setFontSize(parseInt(e.target.value))}
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-500"
+              />
+            </div>
+
+            {/* Opacity Slider */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Opacity: {opacity}%
+              </label>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={opacity}
+                onChange={(e) => setOpacity(parseInt(e.target.value))}
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-500"
+              />
+            </div>
+
+            {/* Rotation Slider */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Rotation: {rotation}°
+              </label>
+              <input
+                type="range"
+                min="0"
+                max="360"
+                value={rotation}
+                onChange={(e) => setRotation(parseInt(e.target.value))}
+                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-500"
+              />
+            </div>
+
+            {/* Presets */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-3">
+                Quick Presets
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {presets.map((preset) => (
+                  <button
+                    key={preset.id}
+                    onClick={() => handlePresetClick(preset.rotation)}
+                    className={`
+                      px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200
+                      ${rotation === preset.rotation
+                        ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }
+                    `}
+                  >
+                    {preset.label}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Action Buttons */}
