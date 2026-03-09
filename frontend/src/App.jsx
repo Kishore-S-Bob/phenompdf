@@ -183,7 +183,7 @@ export default function App() {
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600" />
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48Y2lyY2xlIGN4PSIzMCIgY3k9IjMwIiByPSIyIi8+PC9nPjwvZz48L3N2Zz4=')] opacity-30" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20">
+        <div className="relative w-full py-16 px-4 text-center">
           <div className="text-center">
             <div className="flex justify-center mb-6">
               <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 shadow-2xl">
@@ -202,7 +202,7 @@ export default function App() {
       </div>
 
       {/* Tool Cards Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14 -mt-8 relative z-10">
+      <div className="w-full max-w-6xl mx-auto px-4 py-10 md:py-14 -mt-8 relative z-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {tools.map((tool) => {
             const IconComponent = tool.icon;
@@ -211,7 +211,7 @@ export default function App() {
                 key={tool.id}
                 onClick={() => handleToolClick(tool.id)}
                 className={`
-                  group relative overflow-hidden rounded-2xl p-5 sm:p-6 text-left
+                  w-full group relative overflow-hidden rounded-2xl p-5 sm:p-6 text-left
                   transition-all duration-300 ease-out hover:shadow-xl hover:-translate-y-1
                   active:scale-[0.98]
                   ${activeTab === tool.id
@@ -306,7 +306,7 @@ export default function App() {
       </div>
 
       {/* Main Content */}
-      <main className="flex-1 max-w-3xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-12">
+      <main className="flex-1 w-full max-w-6xl mx-auto px-4 pb-12">
         <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
           {renderPage()}
         </div>
