@@ -7,6 +7,7 @@ import ImageToPdfPage from './pages/ImageToPdfPage';
 import ReorderPage from './pages/ReorderPage';
 import ProtectPage from './pages/ProtectPage';
 import UnlockPage from './pages/UnlockPage';
+import EditPdfPage from './pages/EditPdfPage';
 import PrivacyPage from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
 import ContactPage from './pages/ContactPage';
@@ -64,6 +65,13 @@ const UnlockIcon = () => (
   </svg>
 );
 
+const EditPdfIcon = () => (
+  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 3v4M3 5h4" />
+  </svg>
+);
+
 export default function App() {
   const [activeTab, setActiveTab] = useState('merge');
   const [showInfoPage, setShowInfoPage] = useState(null);
@@ -77,6 +85,7 @@ export default function App() {
     { id: 'reorder', label: 'Reorder PDF', description: 'Rearrange pages in your PDF', icon: ReorderIcon },
     { id: 'protect', label: 'Protect PDF', description: 'Add password protection', icon: ProtectIcon },
     { id: 'unlock', label: 'Unlock PDF', description: 'Remove password protection', icon: UnlockIcon },
+    { id: 'edit-pdf', label: 'Edit PDF', description: 'Add text, highlights and annotations', icon: EditPdfIcon },
   ];
 
   const handleToolClick = (toolId) => {
@@ -114,6 +123,7 @@ export default function App() {
       case 'reorder': return <ReorderPage />;
       case 'protect': return <ProtectPage />;
       case 'unlock': return <UnlockPage />;
+      case 'edit-pdf': return <EditPdfPage />;
       default: return <MergePage />;
     }
   };
