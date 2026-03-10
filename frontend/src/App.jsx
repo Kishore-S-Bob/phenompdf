@@ -10,6 +10,7 @@ import UnlockPage from './pages/UnlockPage';
 import EditPdfPage from './pages/EditPdfPage';
 import RotatePage from './pages/RotatePage';
 import WatermarkPage from './pages/WatermarkPage';
+import OcrPdfPage from './pages/OcrPdfPage';
 import PrivacyPage from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
 import ContactPage from './pages/ContactPage';
@@ -86,6 +87,13 @@ const WatermarkIcon = () => (
   </svg>
 );
 
+const OcrIcon = () => (
+  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+  </svg>
+);
+
 export default function App() {
   const [activeTab, setActiveTab] = useState('merge');
   const [showInfoPage, setShowInfoPage] = useState(null);
@@ -102,6 +110,7 @@ export default function App() {
     { id: 'rotate', label: 'Rotate PDF', description: 'Rotate pages in your PDF', icon: RotateIcon },
     { id: 'watermark', label: 'Watermark PDF', description: 'Add text watermark to your PDF', icon: WatermarkIcon },
     { id: 'edit-pdf', label: 'Edit PDF', description: 'Add text, highlights and annotations', icon: EditPdfIcon },
+    { id: 'ocr-pdf', label: 'OCR PDF', description: 'Extract text from scanned PDFs or images using OCR', icon: OcrIcon },
   ];
 
   const handleToolClick = (toolId) => {
@@ -142,6 +151,7 @@ export default function App() {
       case 'rotate': return <RotatePage />;
       case 'watermark': return <WatermarkPage />;
       case 'edit-pdf': return <EditPdfPage />;
+      case 'ocr-pdf': return <OcrPdfPage />;
       default: return <MergePage />;
     }
   };
