@@ -143,7 +143,7 @@ export default function OcrPdfPage() {
   const processPdf = async (pdfFile) => {
     const arrayBuffer = await pdfFile.arrayBuffer();
     const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-    
+
     const numPages = Math.min(pdf.numPages, MAX_PAGES);
     const pages = [];
     let fullText = '';
@@ -152,7 +152,9 @@ export default function OcrPdfPage() {
       setProgressMessage(`Processing page ${i} of ${numPages}...`);
 
       const page = await pdf.getPage(i);
-      const scale = 2;
+
+      const baseViewport = page.getViewport({ scale: 1 });
+      const scale = baseViewport.width > 1200 ? 1200 / baseViewport.width : 2;
       const viewport = page.getViewport({ scale });
 
       const canvas = document.createElement('canvas');
@@ -166,9 +168,11 @@ export default function OcrPdfPage() {
       }).promise;
 
       const imageData = canvas.toDataURL('image/png');
-      
+
       const result = await performOcr(imageData);
-      
+
+      await new Promise(resolve => setTimeout(resolve, 0));
+
       pages.push({
         pageNumber: i,
         image: canvas,
@@ -185,29 +189,34 @@ export default function OcrPdfPage() {
     setExtractedText(fullText);
   };
 
+  const resizeImageForOcr = (img, maxWidth = 1200) => {
+    let width = img.width;
+    let height = img.height;
+
+    if (width > maxWidth) {
+      const ratio = maxWidth / width;
+      width = maxWidth;
+      height = height * ratio;
+    }
+
+    return { width: Math.round(width), height: Math.round(height) };
+  };
+
   const processImage = async (imageFile) => {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.onload = async () => {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
-        
-        const maxDimension = 2000;
-        let width = img.width;
-        let height = img.height;
-        
-        if (width > maxDimension || height > maxDimension) {
-          const ratio = Math.min(maxDimension / width, maxDimension / height);
-          width *= ratio;
-          height *= ratio;
-        }
+
+        const { width, height } = resizeImageForOcr(img, 1200);
 
         canvas.width = width;
         canvas.height = height;
         ctx.drawImage(img, 0, 0, width, height);
 
         const imageData = canvas.toDataURL('image/png');
-        
+
         setProgressMessage('Extracting text from image...');
 
         const result = await performOcr(imageData);
@@ -234,10 +243,19 @@ export default function OcrPdfPage() {
     const result = await Tesseract.recognize(imageData, 'eng', {
       logger: (m) => {
         if (m.status === 'recognizing text') {
-          setProgressMessage(`Recognizing text... ${Math.round(m.progress * 100)}%`);
+          const progress = Math.round(m.progress * 100);
+          if (progress === 100) {
+            setProgressMessage('Processing OCR results...');
+          } else {
+            setProgressMessage(`Recognizing text... ${progress}%`);
+          }
         }
       }
     });
+
+    setProgressMessage('Processing OCR results...');
+
+    await new Promise(resolve => setTimeout(resolve, 0));
 
     const blocks = result.data.words.map(word => ({
       text: word.text,

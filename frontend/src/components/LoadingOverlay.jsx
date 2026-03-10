@@ -1,6 +1,8 @@
 export default function LoadingOverlay({ isLoading, message = 'Processing your PDF...' }) {
   if (!isLoading) return null;
 
+  const isProcessingResults = message.includes('Processing OCR results');
+
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
       <div className="bg-white rounded-2xl p-8 shadow-2xl flex flex-col items-center gap-4 animate-in fade-in zoom-in duration-200">
@@ -23,6 +25,16 @@ export default function LoadingOverlay({ isLoading, message = 'Processing your P
           </div>
         </div>
         <p className="text-gray-700 font-medium text-lg">{message}</p>
+        {isProcessingResults && (
+          <div className="flex items-center gap-2">
+            <div className="flex gap-1">
+              <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+              <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+              <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+            </div>
+            <span className="text-blue-600 text-sm font-medium">Parsing text data</span>
+          </div>
+        )}
         <p className="text-gray-400 text-sm">Please wait a moment</p>
       </div>
     </div>
