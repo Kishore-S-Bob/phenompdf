@@ -10,12 +10,29 @@ export default function PdfPreview({ file, onTotalPagesChange, maxSize = 200, ro
   const [error, setError] = useState(null);
   const isRenderingRef = useRef(false);
   const canvasRef = useRef(null);
+  const lastFileRef = useRef(null);
+  const lastRotationRef = useRef(0);
+  const lastSelectedPagesRef = useRef([]);
 
   useEffect(() => {
     if (!file) {
       setThumbnails([]);
       setError(null);
       if (onTotalPagesChange) onTotalPagesChange(0);
+      lastFileRef.current = null;
+      lastRotationRef.current = 0;
+      lastSelectedPagesRef.current = [];
+      return;
+    }
+
+    // 1. Prevent Infinite Re-rendering: Check if file, rotation, or selectedPages actually changed
+    const selectedPagesStr = JSON.stringify(selectedPages);
+    const lastSelectedPagesStr = JSON.stringify(lastSelectedPagesRef.current);
+    
+    if (lastFileRef.current === file && 
+        lastRotationRef.current === rotation && 
+        lastSelectedPagesStr === selectedPagesStr) {
+      // Same inputs, no need to re-render
       return;
     }
 
@@ -86,6 +103,11 @@ export default function PdfPreview({ file, onTotalPagesChange, maxSize = 200, ro
         // 6. Avoid State Updates in Render Loops: Store in local variable until completion
         setThumbnails(newThumbnails);
         pdf.destroy();
+        
+        // Update refs after successful render
+        lastFileRef.current = file;
+        lastRotationRef.current = rotation;
+        lastSelectedPagesRef.current = [...selectedPages];
       } catch (err) {
         console.error('PDF preview error:', err);
         setError(err.message || 'Failed to generate previews');
@@ -96,9 +118,9 @@ export default function PdfPreview({ file, onTotalPagesChange, maxSize = 200, ro
       }
     };
 
-    // 1. Prevent Infinite Re-rendering: Run only when a new file is uploaded
+    // 1. Prevent Infinite Re-rendering: Run only when file, rotation, or selectedPages change
     renderPdf();
-  }, [file]);
+  }, [file, rotation, selectedPages, onTotalPagesChange, maxSize]);
 
   if (!file) {
     return null;
