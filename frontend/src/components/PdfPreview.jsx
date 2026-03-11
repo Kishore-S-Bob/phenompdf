@@ -9,6 +9,8 @@ export default function PdfPreview({ file, onTotalPagesChange, maxSize = 200, ro
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const pdfDocRef = useRef(null);
+  const isRenderingRef = useRef(false);
+  const renderIdRef = useRef(0);
 
   const handleTotalPagesChange = useCallback((pages) => {
     if (onTotalPagesChange) {
@@ -48,7 +50,7 @@ export default function PdfPreview({ file, onTotalPagesChange, maxSize = 200, ro
     }
   };
 
-  const generateThumbnails = async (pdf) => {
+  const generateThumbnails = async (pdf, currentRenderId) => {
     const total = pdf.numPages;
     const newThumbnails = [];
 
@@ -66,27 +68,46 @@ export default function PdfPreview({ file, onTotalPagesChange, maxSize = 200, ro
         scale = maxSize / baseViewport.height;
       }
 
-      // Render all pages
+      // Render pages sequentially to avoid UI flickering
       for (let i = 1; i <= total; i++) {
+        // Check if this render is still valid before each page
+        if (currentRenderId !== renderIdRef.current) {
+          return;
+        }
+
         const pageRotation = selectedPages.includes(i) ? rotation : 0;
         const imageUrl = await renderPage(pdf, i, scale, pageRotation);
+        
         if (imageUrl) {
           newThumbnails.push({
             page_number: i,
             image: imageUrl,
             rotation: pageRotation
           });
+          // Update thumbnails incrementally for smoother UI
+          setThumbnails([...newThumbnails]);
         }
       }
 
-      setThumbnails(newThumbnails);
+      // Final check before setting total pages
+      if (currentRenderId !== renderIdRef.current) {
+        return;
+      }
+
       handleTotalPagesChange(total);
     } catch (err) {
+      // Check if this render is still valid
+      if (currentRenderId !== renderIdRef.current) {
+        return;
+      }
       setError(err.message || 'Failed to generate thumbnails');
       setThumbnails([]);
       handleTotalPagesChange(0);
     }
   };
+
+  // Store current rendering parameters to detect changes
+  const renderParamsRef = useRef({ maxSize, rotation, selectedPages });
 
   useEffect(() => {
     if (!file) {
@@ -94,12 +115,31 @@ export default function PdfPreview({ file, onTotalPagesChange, maxSize = 200, ro
       setError(null);
       handleTotalPagesChange(0);
       if (pdfDocRef.current) {
+        pdfDocRef.current.destroy();
         pdfDocRef.current = null;
       }
+      renderParamsRef.current = { maxSize, rotation, selectedPages };
       return;
     }
 
+    // Prevent multiple rendering calls if params haven't changed
+    const selectedPagesChanged = 
+      JSON.stringify(renderParamsRef.current.selectedPages) !== JSON.stringify(selectedPages);
+    const paramsChanged = 
+      renderParamsRef.current.maxSize !== maxSize ||
+      renderParamsRef.current.rotation !== rotation ||
+      selectedPagesChanged;
+
+    // Prevent multiple rendering calls
+    if (isRenderingRef.current && !paramsChanged) {
+      return;
+    }
+
+    const currentRenderId = ++renderIdRef.current;
+    renderParamsRef.current = { maxSize, rotation, selectedPages };
+
     const loadPdf = async () => {
+      isRenderingRef.current = true;
       setIsLoading(true);
       setError(null);
 
@@ -111,24 +151,37 @@ export default function PdfPreview({ file, onTotalPagesChange, maxSize = 200, ro
         const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
         const pdf = await loadingTask.promise;
 
+        // Check if this render is still valid (file hasn't changed)
+        if (currentRenderId !== renderIdRef.current) {
+          pdf.destroy();
+          return;
+        }
+
         pdfDocRef.current = pdf;
 
-        await generateThumbnails(pdf);
+        await generateThumbnails(pdf, currentRenderId);
       } catch (err) {
+        // Check if this render is still valid
+        if (currentRenderId !== renderIdRef.current) {
+          return;
+        }
         setError(err.message || 'Failed to load PDF');
         setThumbnails([]);
         handleTotalPagesChange(0);
       } finally {
-        setIsLoading(false);
+        // Only update loading state if this is still the current render
+        if (currentRenderId === renderIdRef.current) {
+          setIsLoading(false);
+        }
+        isRenderingRef.current = false;
       }
     };
 
     loadPdf();
 
     return () => {
-      if (pdfDocRef.current) {
-        pdfDocRef.current = null;
-      }
+      // Mark this render as obsolete
+      // The currentRenderId check in loadPdf will prevent state updates
     };
   }, [file, maxSize, rotation, selectedPages, handleTotalPagesChange]);
 
