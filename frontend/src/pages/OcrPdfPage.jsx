@@ -36,6 +36,8 @@ export default function OcrPdfPage() {
   const getWorker = async () => {
     if (workerRef.current) return workerRef.current;
     
+    setProgressMessage('Initializing OCR engine...');
+    
     const worker = await Tesseract.createWorker('eng', 1, {
       logger: (m) => {
         if (m.status === 'recognizing text') {
@@ -48,9 +50,20 @@ export default function OcrPdfPage() {
           } else {
             setProgressMessage(`${prefix}Recognizing text... ${progress}%`);
           }
+        } else if (m.status === 'loading language traineddata') {
+          setProgressMessage('Loading language data...');
+        } else if (m.status === 'initializing api') {
+          setProgressMessage('Initializing OCR engine...');
         }
       },
     });
+    
+    // Set optimized OCR parameters for faster processing
+    await worker.setParameters({
+      tessedit_pageseg_mode: 6, // PSM_SINGLE_BLOCK - treat image as a single text block
+      tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
+    });
+    
     workerRef.current = worker;
     return worker;
   };
