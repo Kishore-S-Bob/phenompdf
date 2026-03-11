@@ -7,6 +7,55 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs
 
 const MAX_PAGES = 5;
 
+const preprocessImage = (canvas) => {
+  const ctx = canvas.getContext('2d');
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const data = imageData.data;
+  const width = canvas.width;
+  const height = canvas.height;
+
+  // 1. Grayscale
+  const grayscale = new Uint8ClampedArray(width * height);
+  for (let i = 0; i < data.length; i += 4) {
+    grayscale[i / 4] = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+  }
+
+  // 3. Noise Reduction (Simple 3x3 box blur)
+  const smoothed = new Uint8ClampedArray(width * height);
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      let sum = 0;
+      let count = 0;
+      for (let dy = -1; dy <= 1; dy++) {
+        for (let dx = -1; dx <= 1; dx++) {
+          const ny = y + dy;
+          const nx = x + dx;
+          if (ny >= 0 && ny < height && nx >= 0 && nx < width) {
+            sum += grayscale[ny * width + nx];
+            count++;
+          }
+        }
+      }
+      smoothed[y * width + x] = sum / count;
+    }
+  }
+
+  // 2. High-Contrast Threshold
+  let total = 0;
+  for (let i = 0; i < smoothed.length; i++) {
+    total += smoothed[i];
+  }
+  const avgThreshold = total / (smoothed.length || 1);
+
+  for (let i = 0; i < data.length; i += 4) {
+    const value = smoothed[i / 4] > avgThreshold ? 255 : 0;
+    data[i] = data[i + 1] = data[i + 2] = value;
+    data[i + 3] = 255;
+  }
+
+  ctx.putImageData(imageData, 0, 0);
+};
+
 export default function OcrPdfPage() {
   const [file, setFile] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -60,7 +109,7 @@ export default function OcrPdfPage() {
     
     // Set optimized OCR parameters for faster processing
     await worker.setParameters({
-      tessedit_pageseg_mode: 6, // PSM_SINGLE_BLOCK - treat image as a single text block
+      tessedit_pageseg_mode: 7, // PSM_SINGLE_LINE - treat image as a single text line
       tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
     });
     
@@ -211,7 +260,14 @@ export default function OcrPdfPage() {
         viewport: viewport
       }).promise;
 
-      const imageData = canvas.toDataURL('image/png');
+      const ocrCanvas = document.createElement('canvas');
+      ocrCanvas.width = canvas.width;
+      ocrCanvas.height = canvas.height;
+      const ocrCtx = ocrCanvas.getContext('2d');
+      ocrCtx.drawImage(canvas, 0, 0);
+      preprocessImage(ocrCanvas);
+
+      const imageData = ocrCanvas.toDataURL('image/png');
 
       const result = await performOcr(imageData, i, numPages);
 
@@ -259,7 +315,14 @@ export default function OcrPdfPage() {
         canvas.height = height;
         ctx.drawImage(img, 0, 0, width, height);
 
-        const imageData = canvas.toDataURL('image/png');
+        const ocrCanvas = document.createElement('canvas');
+        ocrCanvas.width = canvas.width;
+        ocrCanvas.height = canvas.height;
+        const ocrCtx = ocrCanvas.getContext('2d');
+        ocrCtx.drawImage(canvas, 0, 0);
+        preprocessImage(ocrCanvas);
+
+        const imageData = ocrCanvas.toDataURL('image/png');
 
         const result = await performOcr(imageData, 1, 1);
 
