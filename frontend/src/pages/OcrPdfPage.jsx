@@ -5,7 +5,7 @@ import * as pdfjsLib from 'pdfjs-dist';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
-const MAX_PAGES = 3;
+const MAX_PAGES = 5;
 
 export default function OcrPdfPage() {
   const [file, setFile] = useState(null);
@@ -20,10 +20,40 @@ export default function OcrPdfPage() {
   const fileInputRef = useRef(null);
   const canvasRef = useRef(null);
   const overlayCanvasRef = useRef(null);
+  const workerRef = useRef(null);
+  const progressInfoRef = useRef({ pageNum: 0, totalPages: 0 });
 
   useEffect(() => {
     document.title = 'OCR PDF – PhenomPDF';
+    return () => {
+      if (workerRef.current) {
+        workerRef.current.terminate();
+        workerRef.current = null;
+      }
+    };
   }, []);
+
+  const getWorker = async () => {
+    if (workerRef.current) return workerRef.current;
+    
+    const worker = await Tesseract.createWorker('eng', 1, {
+      logger: (m) => {
+        if (m.status === 'recognizing text') {
+          const { pageNum, totalPages } = progressInfoRef.current;
+          const progress = Math.round(m.progress * 100);
+          const prefix = totalPages > 1 ? `[Page ${pageNum}/${totalPages}] ` : '';
+          
+          if (progress === 100) {
+            setProgressMessage(`${prefix}Processing OCR results...`);
+          } else {
+            setProgressMessage(`${prefix}Recognizing text... ${progress}%`);
+          }
+        }
+      },
+    });
+    workerRef.current = worker;
+    return worker;
+  };
 
   useEffect(() => {
     if (processedPages.length > 0 && currentPage < processedPages.length) {
@@ -154,7 +184,8 @@ export default function OcrPdfPage() {
       const page = await pdf.getPage(i);
 
       const baseViewport = page.getViewport({ scale: 1 });
-      const scale = baseViewport.width > 1200 ? 1200 / baseViewport.width : 2;
+      // Limit width to approximately 1200px while maintaining aspect ratio
+      const scale = Math.min(2, 1200 / baseViewport.width);
       const viewport = page.getViewport({ scale });
 
       const canvas = document.createElement('canvas');
@@ -169,7 +200,7 @@ export default function OcrPdfPage() {
 
       const imageData = canvas.toDataURL('image/png');
 
-      const result = await performOcr(imageData);
+      const result = await performOcr(imageData, i, numPages);
 
       await new Promise(resolve => setTimeout(resolve, 0));
 
@@ -217,9 +248,7 @@ export default function OcrPdfPage() {
 
         const imageData = canvas.toDataURL('image/png');
 
-        setProgressMessage('Extracting text from image...');
-
-        const result = await performOcr(imageData);
+        const result = await performOcr(imageData, 1, 1);
 
         const pages = [{
           pageNumber: 1,
@@ -239,21 +268,16 @@ export default function OcrPdfPage() {
     });
   };
 
-  const performOcr = async (imageData) => {
-    const result = await Tesseract.recognize(imageData, 'eng', {
-      logger: (m) => {
-        if (m.status === 'recognizing text') {
-          const progress = Math.round(m.progress * 100);
-          if (progress === 100) {
-            setProgressMessage('Processing OCR results...');
-          } else {
-            setProgressMessage(`Recognizing text... ${progress}%`);
-          }
-        }
-      }
-    });
+  const performOcr = async (imageData, pageNum, totalPages) => {
+    progressInfoRef.current = { pageNum, totalPages };
+    const prefix = totalPages > 1 ? `[Page ${pageNum}/${totalPages}] ` : '';
+    
+    setProgressMessage(`${prefix}Preparing image...`);
+    
+    const worker = await getWorker();
+    const result = await worker.recognize(imageData);
 
-    setProgressMessage('Processing OCR results...');
+    setProgressMessage(`${prefix}Processing OCR results...`);
 
     await new Promise(resolve => setTimeout(resolve, 0));
 
