@@ -290,26 +290,38 @@ export default function OcrPdfPage() {
     const worker = await getWorker();
     const result = await worker.recognize(imageData);
 
+    if (!result || !result.data) {
+      console.error("OCR failed or returned no data");
+      return {
+        text: '',
+        blocks: [],
+        lines: []
+      };
+    }
+
     setProgressMessage(`${prefix}Processing OCR results...`);
 
     await new Promise(resolve => setTimeout(resolve, 0));
 
-    const blocks = result.data.words.map(word => ({
+    const words = result?.data?.words || [];
+    const linesData = result?.data?.lines || [];
+
+    const blocks = words.map(word => ({
       text: word.text,
-      x0: word.bbox.x0,
-      y0: word.bbox.y0,
-      x1: word.bbox.x1,
-      y1: word.bbox.y1,
+      x0: word.bbox?.x0 || 0,
+      y0: word.bbox?.y0 || 0,
+      x1: word.bbox?.x1 || 0,
+      y1: word.bbox?.y1 || 0,
       confidence: word.confidence
     }));
 
-    const lines = result.data.lines.map(line => ({
+    const lines = linesData.map(line => ({
       text: line.text,
       bbox: line.bbox
     }));
 
     return {
-      text: result.data.text,
+      text: result.data.text || '',
       blocks: blocks,
       lines: lines
     };
