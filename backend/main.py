@@ -771,6 +771,74 @@ async def watermark_pdf(
         raise HTTPException(status_code=500, detail=f"Error adding watermark: {str(e)}")
 
 
+@app.post("/extract-pages")
+async def extract_pages(
+    file: UploadFile = File(...),
+    pages: str = Form(...)
+):
+    if not file:
+        raise HTTPException(status_code=400, detail="No file provided")
+
+    if not file.filename.lower().endswith(".pdf"):
+        raise HTTPException(
+            status_code=400,
+            detail=f"File {file.filename} is not a PDF"
+        )
+
+    if not pages:
+        raise HTTPException(status_code=400, detail="Pages parameter is required")
+
+    try:
+        content = await file.read()
+        file_obj = io.BytesIO(content)
+        reader = PdfReader(file_obj)
+        total_pages = len(reader.pages)
+
+        # Parse page numbers from comma-separated string
+        try:
+            selected_pages = [int(p.strip()) for p in pages.split(",") if p.strip()]
+        except ValueError:
+            raise HTTPException(
+                status_code=400,
+                detail="Invalid page numbers format. Use comma-separated numbers (e.g., 1,3,5)"
+            )
+
+        if not selected_pages:
+            raise HTTPException(
+                status_code=400,
+                detail="At least one page must be selected"
+            )
+
+        # Validate page numbers
+        for page_num in selected_pages:
+            if page_num < 1 or page_num > total_pages:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Page {page_num} is out of range (1-{total_pages})"
+                )
+
+        # Create new PDF with selected pages
+        writer = PdfWriter()
+        for page_num in selected_pages:
+            writer.add_page(reader.pages[page_num - 1])
+
+        output = io.BytesIO()
+        writer.write(output)
+        output.seek(0)
+
+        return StreamingResponse(
+            iter([output.getvalue()]),
+            media_type="application/pdf",
+            headers={
+                "Content-Disposition": "attachment; filename=extracted_pages.pdf"
+            }
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error extracting pages: {str(e)}")
+
+
 @app.get("/health")
 async def health_check():
     return {"status": "ok"}

@@ -11,6 +11,7 @@ import EditPdfPage from './pages/EditPdfPage';
 import RotatePage from './pages/RotatePage';
 import WatermarkPage from './pages/WatermarkPage';
 import OcrPdfPage from './pages/OcrPdfPage';
+import ExtractPagesPage from './pages/ExtractPagesPage';
 import PrivacyPage from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
 import ContactPage from './pages/ContactPage';
@@ -94,6 +95,13 @@ const OcrIcon = () => (
   </svg>
 );
 
+const ExtractPagesIcon = () => (
+  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+  </svg>
+);
+
 export default function App() {
   const [activeTab, setActiveTab] = useState('merge');
   const [showInfoPage, setShowInfoPage] = useState(null);
@@ -101,6 +109,7 @@ export default function App() {
   const tools = [
     { id: 'merge', label: 'Merge PDF', description: 'Combine multiple PDFs into one', icon: MergeIcon },
     { id: 'split', label: 'Split PDF', description: 'Extract pages from your PDF', icon: SplitIcon },
+    { id: 'extract-pages', label: 'Extract Pages', description: 'Extract specific pages to a new PDF', icon: ExtractPagesIcon },
     { id: 'compress', label: 'Compress PDF', description: 'Reduce file size while keeping quality', icon: CompressIcon },
     { id: 'pdf-to-image', label: 'PDF → Image', description: 'Convert PDF pages to images', icon: PdfToImageIcon },
     { id: 'image-to-pdf', label: 'Image → PDF', description: 'Convert images to a single PDF', icon: ImageToPdfIcon },
@@ -142,6 +151,7 @@ export default function App() {
     switch (activeTab) {
       case 'merge': return <MergePage />;
       case 'split': return <SplitPage />;
+      case 'extract-pages': return <ExtractPagesPage />;
       case 'compress': return <CompressPage />;
       case 'pdf-to-image': return <PdfToImagePage />;
       case 'image-to-pdf': return <ImageToPdfPage />;
