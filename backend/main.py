@@ -11,7 +11,7 @@ from PIL import Image
 import json
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
-
+from fastapi import Form
 
 app = FastAPI()
 
@@ -185,6 +185,7 @@ async def merge_pdfs(files: list[UploadFile] = File(...)):
 
 
 @app.post("/split")
+
 async def split_pdf(
     file: UploadFile = File(...),
     start_page: int = Form(...),
