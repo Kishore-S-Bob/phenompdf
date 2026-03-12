@@ -187,8 +187,8 @@ async def merge_pdfs(files: list[UploadFile] = File(...)):
 @app.post("/split")
 async def split_pdf(
     file: UploadFile = File(...),
-    start_page: int = 1,
-    end_page: int = 1
+    start_page: int = Form(...),
+    end_page: int = Form(...)
 ):
     if not file:
         raise HTTPException(status_code=400, detail="No file provided")
