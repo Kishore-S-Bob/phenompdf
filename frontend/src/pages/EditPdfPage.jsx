@@ -2,13 +2,14 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import * as pdfjsLib from 'pdfjs-dist';
 import DropZone from '../components/DropZone';
 import LoadingOverlay from '../components/LoadingOverlay';
+import SEOContent from '../components/SEOContent';
 import { API_BASE } from '../api';
 
 // Configure PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
-export default function EditPdfPage() {
+export default function EditPdfPage({ onToolClick }) {
   const [pdfFile, setPdfFile] = useState(null);
   const [pdfDoc, setPdfDoc] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -24,8 +25,25 @@ export default function EditPdfPage() {
   const canvasRef = useRef(null);
 
   useEffect(() => {
-    document.title = 'Edit PDF – PhenomPDF';
+    document.title = 'Edit PDF Online Free – PhenomPDF';
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Edit PDF files online for free. Add text, highlights, and annotations to your PDF documents easily with PhenomPDF.');
+    }
   }, []);
+
+  const faqs = [
+    {
+      question: 'Can I edit text in a PDF online?',
+      answer: 'You can add new text, highlights, and annotations to your PDF using our online editor.'
+    }
+  ];
+
+  const relatedTools = [
+    { id: 'watermark', label: 'Watermark PDF' },
+    { id: 'ocr-pdf', label: 'OCR PDF' },
+    { id: 'merge', label: 'Merge PDF' }
+  ];
 
   const handleFileSelected = useCallback((files) => {
     if (files.length > 0) {
@@ -415,8 +433,8 @@ export default function EditPdfPage() {
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
           Edit PDF Online
         </h1>
-        <p className="text-gray-500">
-          Add text, highlight, draw, and annotate your PDF files
+        <p className="text-gray-500 max-w-2xl mx-auto">
+          Edit PDF files online for free with PhenomPDF. Add text, highlights, and annotations to your PDF documents easily.
         </p>
       </div>
 
@@ -585,6 +603,14 @@ export default function EditPdfPage() {
           </div>
         </div>
       )}
+
+      <SEOContent
+        toolName="Edit PDF"
+        description="Edit PDF provides a comprehensive set of tools for annotating and modifying your PDF documents. Whether you need to sign a form, highlight important information, or add explanatory text to a report, our editor makes it simple. All changes are rendered in real-time, and you can download the final annotated PDF immediately."
+        faqs={faqs}
+        relatedTools={relatedTools}
+        onToolClick={onToolClick}
+      />
     </>
   );
 }

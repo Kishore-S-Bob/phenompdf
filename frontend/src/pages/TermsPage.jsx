@@ -3,6 +3,10 @@ import { useEffect } from 'react';
 export default function TermsPage() {
   useEffect(() => {
     document.title = 'Terms of Service – PhenomPDF';
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Terms of Service for PhenomPDF. Read the rules and regulations for using our free online PDF tools.');
+    }
   }, []);
 
   return (

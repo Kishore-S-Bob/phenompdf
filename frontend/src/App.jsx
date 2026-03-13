@@ -131,21 +131,72 @@ export default function App() {
     { id: 'ocr-pdf', label: 'OCR PDF', description: 'Extract text from scanned PDFs or images using OCR', icon: OcrIcon },
   ];
 
+  useEffect(() => {
+    const path = window.location.pathname.replace('/', '');
+    const toolMap = {
+      'merge-pdf': 'merge',
+      'split-pdf': 'split',
+      'compress-pdf': 'compress',
+      'pdf-to-image': 'pdf-to-image',
+      'image-to-pdf': 'image-to-pdf',
+      'reorder-pdf': 'reorder',
+      'protect-pdf': 'protect',
+      'unlock-pdf': 'unlock',
+      'rotate-pdf': 'rotate',
+      'watermark-pdf': 'watermark',
+      'edit-pdf': 'edit-pdf',
+      'ocr-pdf': 'ocr-pdf',
+      'extract-pages': 'extract-pages',
+      'reverse-pdf': 'reverse-pdf',
+    };
+
+    const infoPages = ['privacy', 'terms', 'contact'];
+
+    if (toolMap[path]) {
+      setActiveTab(toolMap[path]);
+      setShowInfoPage(null);
+    } else if (infoPages.includes(path)) {
+      setShowInfoPage(path);
+    }
+  }, []);
+
   const handleToolClick = (toolId) => {
     setActiveTab(toolId);
     setShowInfoPage(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // Update URL without reloading
+    const toolMapRev = {
+      'merge': 'merge-pdf',
+      'split': 'split-pdf',
+      'compress': 'compress-pdf',
+      'pdf-to-image': 'pdf-to-image',
+      'image-to-pdf': 'image-to-pdf',
+      'reorder': 'reorder-pdf',
+      'protect': 'protect-pdf',
+      'unlock': 'unlock-pdf',
+      'rotate': 'rotate-pdf',
+      'watermark': 'watermark-pdf',
+      'edit-pdf': 'edit-pdf',
+      'ocr-pdf': 'ocr-pdf',
+      'extract-pages': 'extract-pages',
+      'reverse-pdf': 'reverse-pdf',
+    };
+    const newPath = toolMapRev[toolId] || '';
+    window.history.pushState({}, '', `/${newPath}`);
   };
 
   const handleInfoPageClick = (page) => {
     setShowInfoPage(page);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.history.pushState({}, '', `/${page}`);
   };
 
   const handleHomeClick = () => {
     setShowInfoPage(null);
     setActiveTab('merge');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.history.pushState({}, '', '/');
   };
 
   const renderPage = () => {
@@ -154,25 +205,25 @@ export default function App() {
         case 'privacy': return <PrivacyPage />;
         case 'terms': return <TermsPage />;
         case 'contact': return <ContactPage />;
-        default: return <MergePage />;
+        default: return <MergePage onToolClick={handleToolClick} />;
       }
     }
     switch (activeTab) {
-      case 'merge': return <MergePage />;
-      case 'split': return <SplitPage />;
-      case 'extract-pages': return <ExtractPagesPage />;
-      case 'reverse-pdf': return <ReversePdfPage />;
-      case 'compress': return <CompressPage />;
-      case 'pdf-to-image': return <PdfToImagePage />;
-      case 'image-to-pdf': return <ImageToPdfPage />;
-      case 'reorder': return <ReorderPage />;
-      case 'protect': return <ProtectPage />;
-      case 'unlock': return <UnlockPage />;
-      case 'rotate': return <RotatePage />;
-      case 'watermark': return <WatermarkPage />;
-      case 'edit-pdf': return <EditPdfPage />;
-      case 'ocr-pdf': return <OcrPdfPage />;
-      default: return <MergePage />;
+      case 'merge': return <MergePage onToolClick={handleToolClick} />;
+      case 'split': return <SplitPage onToolClick={handleToolClick} />;
+      case 'extract-pages': return <ExtractPagesPage onToolClick={handleToolClick} />;
+      case 'reverse-pdf': return <ReversePdfPage onToolClick={handleToolClick} />;
+      case 'compress': return <CompressPage onToolClick={handleToolClick} />;
+      case 'pdf-to-image': return <PdfToImagePage onToolClick={handleToolClick} />;
+      case 'image-to-pdf': return <ImageToPdfPage onToolClick={handleToolClick} />;
+      case 'reorder': return <ReorderPage onToolClick={handleToolClick} />;
+      case 'protect': return <ProtectPage onToolClick={handleToolClick} />;
+      case 'unlock': return <UnlockPage onToolClick={handleToolClick} />;
+      case 'rotate': return <RotatePage onToolClick={handleToolClick} />;
+      case 'watermark': return <WatermarkPage onToolClick={handleToolClick} />;
+      case 'edit-pdf': return <EditPdfPage onToolClick={handleToolClick} />;
+      case 'ocr-pdf': return <OcrPdfPage onToolClick={handleToolClick} />;
+      default: return <MergePage onToolClick={handleToolClick} />;
     }
   };
 

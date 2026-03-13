@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import LoadingOverlay from '../components/LoadingOverlay';
+import SEOContent from '../components/SEOContent';
 import { API_BASE } from '../api';
 
-export default function ImageToPdfPage() {
+export default function ImageToPdfPage({ onToolClick }) {
   const [images, setImages] = useState([]);
   const [isConverting, setIsConverting] = useState(false);
   const [error, setError] = useState(null);
@@ -12,8 +13,25 @@ export default function ImageToPdfPage() {
   const fileInputRef = useRef(null);
 
   useEffect(() => {
-    document.title = 'Image to PDF – PhenomPDF';
+    document.title = 'Convert Image to PDF Online – PhenomPDF';
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Convert JPG, PNG, and other images into a single PDF document. Easy online image to PDF converter with PhenomPDF.');
+    }
   }, []);
+
+  const faqs = [
+    {
+      question: 'Can I combine multiple images into one PDF?',
+      answer: 'Yes, you can upload multiple images and they will be merged into a single PDF file.'
+    }
+  ];
+
+  const relatedTools = [
+    { id: 'pdf-to-image', label: 'PDF → Image' },
+    { id: 'merge', label: 'Merge PDF' },
+    { id: 'compress', label: 'Compress PDF' }
+  ];
 
   const ALLOWED_TYPES = ['image/png', 'image/jpeg', 'image/jpg'];
 
@@ -166,8 +184,8 @@ export default function ImageToPdfPage() {
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
           Image to PDF Converter
         </h1>
-        <p className="text-gray-500">
-          Upload images and convert them to a single PDF
+        <p className="text-gray-500 max-w-2xl mx-auto">
+          Convert JPG, PNG, and other images into a single PDF document with PhenomPDF. Easy online image to PDF converter.
         </p>
       </div>
 
@@ -391,6 +409,14 @@ export default function ImageToPdfPage() {
           'Convert to PDF'
         )}
       </button>
+
+      <SEOContent
+        toolName="Image to PDF"
+        description="Image to PDF converter allows you to transform your pictures into a professional PDF document. Whether you have photos of a document, receipts, or creative work, you can upload them all, arrange them in the right order, and create a single PDF file. It's an excellent way to organize images for sharing or archiving."
+        faqs={faqs}
+        relatedTools={relatedTools}
+        onToolClick={onToolClick}
+      />
     </>
   );
 }

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import SingleDropZone from '../components/SingleDropZone';
 import LoadingOverlay from '../components/LoadingOverlay';
+import SEOContent from '../components/SEOContent';
 import * as pdfjsLib from 'pdfjs-dist';
 import { API_BASE } from '../api';
 
@@ -15,7 +16,7 @@ const presets = [
   { id: 'vertical', label: 'Vertical', rotation: 90 },
 ];
 
-export default function WatermarkPage() {
+export default function WatermarkPage({ onToolClick }) {
   const [file, setFile] = useState(null);
   const [pdfDoc, setPdfDoc] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -41,8 +42,25 @@ export default function WatermarkPage() {
   const pdfDocRef = useRef(null);
 
   useEffect(() => {
-    document.title = 'Watermark PDF – PhenomPDF';
+    document.title = 'Add Watermark to PDF – PhenomPDF';
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Add text watermarks to your PDF documents. Customize the text, color, and position of your watermark with PhenomPDF.');
+    }
   }, []);
+
+  const faqs = [
+    {
+      question: 'Is it possible to add a watermark to all pages?',
+      answer: 'Yes, our tool allows you to add a custom text watermark to every page of your PDF.'
+    }
+  ];
+
+  const relatedTools = [
+    { id: 'protect', label: 'Protect PDF' },
+    { id: 'edit-pdf', label: 'Edit PDF' },
+    { id: 'merge', label: 'Merge PDF' }
+  ];
 
   // Initialize watermark position when PDF loads
   useEffect(() => {
@@ -238,10 +256,10 @@ export default function WatermarkPage() {
 
       <div className="text-center mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-          Watermark PDF
+          Add Watermark to PDF
         </h1>
-        <p className="text-gray-500">
-          Add a text watermark to your PDF file with live preview
+        <p className="text-gray-500 max-w-2xl mx-auto">
+          Add text watermarks to your PDF documents with PhenomPDF. Customize the text, color, and position of your watermark.
         </p>
       </div>
 
@@ -533,6 +551,14 @@ export default function WatermarkPage() {
           </ul>
         </div>
       )}
+
+      <SEOContent
+        toolName="Watermark PDF"
+        description="Watermark PDF allows you to protect your intellectual property by adding a custom text watermark to your PDF documents. You can customize the font size, opacity, and rotation, and even drag the watermark to the exact position you want on the page. The watermark is applied to all pages of your PDF, ensuring consistent protection throughout the document."
+        faqs={faqs}
+        relatedTools={relatedTools}
+        onToolClick={onToolClick}
+      />
     </>
   );
 }

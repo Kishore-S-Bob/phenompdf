@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import SingleDropZone from '../components/SingleDropZone';
 import LoadingOverlay from '../components/LoadingOverlay';
+import SEOContent from '../components/SEOContent';
 import { API_BASE } from '../api';
 
-export default function ProtectPage() {
+export default function ProtectPage({ onToolClick }) {
   const [file, setFile] = useState(null);
   const [password, setPassword] = useState('');
   const [isProtecting, setIsProtecting] = useState(false);
@@ -11,8 +12,25 @@ export default function ProtectPage() {
   const [protectedFile, setProtectedFile] = useState(null);
 
   useEffect(() => {
-    document.title = 'Protect PDF – PhenomPDF';
+    document.title = 'Protect PDF with Password – PhenomPDF';
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Secure your PDF files by adding a password. Encrypt your sensitive documents online for free with PhenomPDF.');
+    }
   }, []);
+
+  const faqs = [
+    {
+      question: 'How do I password-protect a PDF?',
+      answer: 'Upload your PDF, enter a strong password, and click Protect PDF to secure your file instantly.'
+    }
+  ];
+
+  const relatedTools = [
+    { id: 'unlock', label: 'Unlock PDF' },
+    { id: 'watermark', label: 'Watermark PDF' },
+    { id: 'merge', label: 'Merge PDF' }
+  ];
 
   const handleFileAdded = (newFile) => {
     setFile(newFile);
@@ -84,8 +102,8 @@ export default function ProtectPage() {
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
           Protect PDF with Password
         </h1>
-        <p className="text-gray-500">
-          Add password protection to your PDF file
+        <p className="text-gray-500 max-w-2xl mx-auto">
+          Secure your PDF files by adding a password with PhenomPDF. Encrypt your sensitive documents online for free.
         </p>
       </div>
 
@@ -169,6 +187,14 @@ export default function ProtectPage() {
           'Protect PDF'
         )}
       </button>
+
+      <SEOContent
+        toolName="Protect PDF"
+        description="Protect PDF is a critical tool for maintaining the confidentiality of your documents. By adding a password, you ensure that only authorized individuals can open and view the contents of your PDF. Our tool uses strong encryption to secure your file, providing peace of mind when sharing sensitive information online."
+        faqs={faqs}
+        relatedTools={relatedTools}
+        onToolClick={onToolClick}
+      />
     </>
   );
 }

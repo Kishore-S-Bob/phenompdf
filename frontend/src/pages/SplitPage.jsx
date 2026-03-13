@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import SingleDropZone from '../components/SingleDropZone';
 import PdfPreview from '../components/PdfPreview';
 import LoadingOverlay from '../components/LoadingOverlay';
+import SEOContent from '../components/SEOContent';
 import { API_BASE } from '../api';
 
-export default function SplitPage() {
+export default function SplitPage({ onToolClick }) {
   const [file, setFile] = useState(null);
   const [totalPages, setTotalPages] = useState(0);
   const [startPage, setStartPage] = useState('');
@@ -13,8 +14,25 @@ export default function SplitPage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    document.title = 'Split PDF – PhenomPDF';
+    document.title = 'Split PDF Online – PhenomPDF';
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Split PDF files online easily. Upload your PDF, choose the page range, and download the extracted pages instantly with PhenomPDF.');
+    }
   }, []);
+
+  const faqs = [
+    {
+      question: 'How do I split a PDF file?',
+      answer: 'Upload your PDF, select the page range, and click Split PDF to download the extracted pages.'
+    }
+  ];
+
+  const relatedTools = [
+    { id: 'merge', label: 'Merge PDF' },
+    { id: 'extract-pages', label: 'Extract Pages' },
+    { id: 'compress', label: 'Compress PDF' }
+  ];
 
   const handleFileAdded = (newFile) => {
     setFile(newFile);
@@ -114,8 +132,8 @@ export default function SplitPage() {
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
           Split PDF Files Easily
         </h1>
-        <p className="text-gray-500">
-          Extract specific pages from a PDF file
+        <p className="text-gray-500 max-w-2xl mx-auto">
+          Split PDF files online easily with PhenomPDF. Select the pages you want to extract and download them instantly without installing any software.
         </p>
       </div>
 
@@ -208,6 +226,14 @@ export default function SplitPage() {
           'Split PDF'
         )}
       </button>
+
+      <SEOContent
+        toolName="Split PDF"
+        description="Split PDF allows you to extract specific pages from a PDF document or split it into multiple smaller files. This is incredibly useful when you only need a portion of a large document, such as a single chapter from a book or specific invoices from a monthly statement. Our tool is completely free and works directly in your browser."
+        faqs={faqs}
+        relatedTools={relatedTools}
+        onToolClick={onToolClick}
+      />
     </>
   );
 }

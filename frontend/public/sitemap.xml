@@ -4,13 +4,13 @@
     <loc>https://phenompdf.vercel.app/</loc>
   </url>
   <url>
-    <loc>https://phenompdf.vercel.app/merge</loc>
+    <loc>https://phenompdf.vercel.app/merge-pdf</loc>
   </url>
   <url>
-    <loc>https://phenompdf.vercel.app/split</loc>
+    <loc>https://phenompdf.vercel.app/split-pdf</loc>
   </url>
   <url>
-    <loc>https://phenompdf.vercel.app/compress</loc>
+    <loc>https://phenompdf.vercel.app/compress-pdf</loc>
   </url>
   <url>
     <loc>https://phenompdf.vercel.app/pdf-to-image</loc>
@@ -19,13 +19,31 @@
     <loc>https://phenompdf.vercel.app/image-to-pdf</loc>
   </url>
   <url>
-    <loc>https://phenompdf.vercel.app/reorder</loc>
+    <loc>https://phenompdf.vercel.app/reorder-pdf</loc>
   </url>
   <url>
-    <loc>https://phenompdf.vercel.app/protect</loc>
+    <loc>https://phenompdf.vercel.app/protect-pdf</loc>
   </url>
   <url>
-    <loc>https://phenompdf.vercel.app/unlock</loc>
+    <loc>https://phenompdf.vercel.app/unlock-pdf</loc>
+  </url>
+  <url>
+    <loc>https://phenompdf.vercel.app/rotate-pdf</loc>
+  </url>
+  <url>
+    <loc>https://phenompdf.vercel.app/watermark-pdf</loc>
+  </url>
+  <url>
+    <loc>https://phenompdf.vercel.app/edit-pdf</loc>
+  </url>
+  <url>
+    <loc>https://phenompdf.vercel.app/ocr-pdf</loc>
+  </url>
+  <url>
+    <loc>https://phenompdf.vercel.app/extract-pages</loc>
+  </url>
+  <url>
+    <loc>https://phenompdf.vercel.app/reverse-pdf</loc>
   </url>
   <url>
     <loc>https://phenompdf.vercel.app/privacy</loc>

@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import LoadingOverlay from '../components/LoadingOverlay';
+import SEOContent from '../components/SEOContent';
 import Tesseract from 'tesseract.js';
 import * as pdfjsLib from 'pdfjs-dist';
 
@@ -56,7 +57,7 @@ const preprocessImage = (canvas) => {
   ctx.putImageData(imageData, 0, 0);
 };
 
-export default function OcrPdfPage() {
+export default function OcrPdfPage({ onToolClick }) {
   const [file, setFile] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState(null);
@@ -73,7 +74,11 @@ export default function OcrPdfPage() {
   const progressInfoRef = useRef({ pageNum: 0, totalPages: 0 });
 
   useEffect(() => {
-    document.title = 'OCR PDF – PhenomPDF';
+    document.title = 'OCR PDF Online Free – PhenomPDF';
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Convert scanned PDFs and images into searchable and editable text using OCR technology with PhenomPDF.');
+    }
     return () => {
       if (workerRef.current) {
         workerRef.current.terminate();
@@ -81,6 +86,19 @@ export default function OcrPdfPage() {
       }
     };
   }, []);
+
+  const faqs = [
+    {
+      question: 'What is OCR?',
+      answer: 'OCR (Optical Character Recognition) is a technology that recognizes text within images and scanned documents.'
+    }
+  ];
+
+  const relatedTools = [
+    { id: 'edit-pdf', label: 'Edit PDF' },
+    { id: 'pdf-to-image', label: 'PDF → Image' },
+    { id: 'merge', label: 'Merge PDF' }
+  ];
 
   const getWorker = async () => {
     if (workerRef.current) return workerRef.current;
@@ -431,8 +449,8 @@ export default function OcrPdfPage() {
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
           OCR PDF / Image to Text
         </h1>
-        <p className="text-gray-500">
-          Extract text from scanned PDFs or images using OCR
+        <p className="text-gray-500 max-w-2xl mx-auto">
+          Convert scanned PDFs and images into searchable and editable text using OCR technology with PhenomPDF.
         </p>
       </div>
 
@@ -683,6 +701,14 @@ export default function OcrPdfPage() {
           )}
         </>
       )}
+
+      <SEOContent
+        toolName="OCR PDF"
+        description="OCR PDF (Optical Character Recognition) is an advanced tool that allows you to extract text from scanned documents and images. If you have a PDF that is essentially a collection of images, or just a standalone image file, our OCR tool will analyze the content and provide you with editable text that you can copy or download. This is perfect for digitizing old documents or extracting information from unsearchable files."
+        faqs={faqs}
+        relatedTools={relatedTools}
+        onToolClick={onToolClick}
+      />
     </>
   );
 }

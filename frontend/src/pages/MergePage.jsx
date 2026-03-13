@@ -2,16 +2,34 @@ import { useState, useEffect } from 'react';
 import DropZone from '../components/DropZone';
 import FileList from '../components/FileList';
 import LoadingOverlay from '../components/LoadingOverlay';
+import SEOContent from '../components/SEOContent';
 import { API_BASE } from '../api';
 
-export default function MergePage() {
+export default function MergePage({ onToolClick }) {
   const [files, setFiles] = useState([]);
   const [isMerging, setIsMerging] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    document.title = 'Merge PDF – PhenomPDF';
+    document.title = 'Merge PDF Online Free – PhenomPDF';
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Merge multiple PDF files into one easily with PhenomPDF. Upload your PDFs, arrange the order, and download the combined file instantly.');
+    }
   }, []);
+
+  const faqs = [
+    {
+      question: 'How do I merge PDF files?',
+      answer: 'Upload your PDFs, arrange them in the desired order, and click Merge PDF to download the combined file.'
+    }
+  ];
+
+  const relatedTools = [
+    { id: 'split', label: 'Split PDF' },
+    { id: 'compress', label: 'Compress PDF' },
+    { id: 'reorder', label: 'Reorder PDF' }
+  ];
 
   const handleFilesAdded = (newFiles) => {
     setFiles((prev) => [...prev, ...newFiles]);
@@ -84,8 +102,8 @@ export default function MergePage() {
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
           Merge PDF Files Online
         </h1>
-        <p className="text-gray-500">
-          Upload multiple PDFs and merge them into a single file
+        <p className="text-gray-500 max-w-2xl mx-auto">
+          Combine multiple PDF files into one easily with PhenomPDF. Upload your PDFs, arrange the order, and download the combined file instantly.
         </p>
       </div>
 
@@ -136,6 +154,14 @@ export default function MergePage() {
           'Merge PDFs'
         )}
       </button>
+
+      <SEOContent
+        toolName="Merge PDF"
+        description="Merge PDF allows you to combine multiple PDF documents into a single file. This tool is perfect for organizing your documents, combining reports, or merging scanned pages into one coherent document. Our online merge tool is fast, secure, and works directly in your browser without any software installation."
+        faqs={faqs}
+        relatedTools={relatedTools}
+        onToolClick={onToolClick}
+      />
     </>
   );
 }
