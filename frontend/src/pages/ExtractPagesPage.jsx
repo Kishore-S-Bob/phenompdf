@@ -13,7 +13,7 @@ export default function ExtractPagesPage({ onToolClick }) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    document.title = 'Extract PDF Pages Online – PhenomPDF';
+    document.title = 'Extract PDF Pages – PhenomPDF';
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
       metaDescription.setAttribute('content', 'Extract specific pages from your PDF file online. Select the pages you need and create a new PDF document in seconds with PhenomPDF.');

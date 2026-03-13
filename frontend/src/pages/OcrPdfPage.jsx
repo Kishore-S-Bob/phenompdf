@@ -74,7 +74,7 @@ export default function OcrPdfPage({ onToolClick }) {
   const progressInfoRef = useRef({ pageNum: 0, totalPages: 0 });
 
   useEffect(() => {
-    document.title = 'OCR PDF Online Free – PhenomPDF';
+    document.title = 'Extract Text from PDF – PhenomPDF';
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
       metaDescription.setAttribute('content', 'Convert scanned PDFs and images into searchable and editable text using OCR technology with PhenomPDF.');
