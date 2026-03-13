@@ -11,7 +11,7 @@ export default function MergePage({ onToolClick }) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    document.title = 'Merge PDF Online Free – PhenomPDF';
+    document.title = 'Merge PDF Online – PhenomPDF';
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
       metaDescription.setAttribute('content', 'Merge multiple PDF files into one easily with PhenomPDF. Upload your PDFs, arrange the order, and download the combined file instantly.');
