@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import SingleDropZone from '../components/SingleDropZone';
 import PdfPreview from '../components/PdfPreview';
 import LoadingOverlay from '../components/LoadingOverlay';
+import SEOContent from '../components/SEOContent';
 import { API_BASE } from '../api';
 
-export default function ExtractPagesPage() {
+export default function ExtractPagesPage({ onToolClick }) {
   const [file, setFile] = useState(null);
   const [totalPages, setTotalPages] = useState(0);
   const [pagesInput, setPagesInput] = useState('');
@@ -12,8 +13,25 @@ export default function ExtractPagesPage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    document.title = 'Extract Pages – PhenomPDF';
+    document.title = 'Extract PDF Pages Online – PhenomPDF';
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Extract specific pages from your PDF file online. Select the pages you need and create a new PDF document in seconds with PhenomPDF.');
+    }
   }, []);
+
+  const faqs = [
+    {
+      question: 'How do I extract pages from a PDF?',
+      answer: 'Upload your PDF, enter the page numbers you want to extract (e.g., 1,3,5), and click Extract Pages to download the new PDF.'
+    }
+  ];
+
+  const relatedTools = [
+    { id: 'split', label: 'Split PDF' },
+    { id: 'merge', label: 'Merge PDF' },
+    { id: 'reorder', label: 'Reorder PDF' }
+  ];
 
   const handleFileAdded = (newFile) => {
     setFile(newFile);
@@ -102,8 +120,8 @@ export default function ExtractPagesPage() {
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
           Extract Pages from PDF
         </h1>
-        <p className="text-gray-500">
-          Select specific pages to create a new PDF
+        <p className="text-gray-500 max-w-2xl mx-auto">
+          Extract specific pages from your PDF file online with PhenomPDF. Select the pages you need and create a new PDF document in seconds.
         </p>
       </div>
 
@@ -179,6 +197,14 @@ export default function ExtractPagesPage() {
           'Extract Pages'
         )}
       </button>
+
+      <SEOContent
+        toolName="Extract Pages"
+        description="Extract Pages is a precise tool that allows you to pull specific pages out of a PDF and save them as a new file. Unlike splitting, which might divide the whole document, extraction lets you pick exactly which pages you want, in any order. This is perfect for sharing only relevant parts of a document or creating a summary PDF."
+        faqs={faqs}
+        relatedTools={relatedTools}
+        onToolClick={onToolClick}
+      />
     </>
   );
 }

@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import SingleDropZone from '../components/SingleDropZone';
 import LoadingOverlay from '../components/LoadingOverlay';
+import SEOContent from '../components/SEOContent';
 import { API_BASE } from '../api';
 
-export default function CompressPage() {
+export default function CompressPage({ onToolClick }) {
   const [file, setFile] = useState(null);
   const [isCompressing, setIsCompressing] = useState(false);
   const [error, setError] = useState(null);
@@ -12,8 +13,25 @@ export default function CompressPage() {
   const [compressedSize, setCompressedSize] = useState(null);
 
   useEffect(() => {
-    document.title = 'Compress PDF – PhenomPDF';
+    document.title = 'Compress PDF Online – PhenomPDF';
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Reduce the file size of your PDF documents without losing quality. Optimize your PDFs for sharing and storage with PhenomPDF.');
+    }
   }, []);
+
+  const faqs = [
+    {
+      question: 'Does compressing a PDF reduce quality?',
+      answer: 'PhenomPDF uses advanced compression to reduce file size while maintaining the best possible quality.'
+    }
+  ];
+
+  const relatedTools = [
+    { id: 'merge', label: 'Merge PDF' },
+    { id: 'split', label: 'Split PDF' },
+    { id: 'pdf-to-image', label: 'PDF → Image' }
+  ];
 
   const handleFileAdded = (newFile) => {
     setFile(newFile);
@@ -97,8 +115,8 @@ export default function CompressPage() {
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
           Compress PDF Files
         </h1>
-        <p className="text-gray-500">
-          Reduce PDF file size while maintaining quality
+        <p className="text-gray-500 max-w-2xl mx-auto">
+          Reduce the file size of your PDF documents without losing quality with PhenomPDF. Optimize your PDFs for sharing and storage.
         </p>
       </div>
 
@@ -196,6 +214,14 @@ export default function CompressPage() {
           'Compress PDF'
         )}
       </button>
+
+      <SEOContent
+        toolName="Compress PDF"
+        description="Compress PDF is an essential tool for anyone who needs to send large PDF files over email or upload them to websites with file size limits. Our tool uses intelligent compression algorithms to reduce the size of your images and remove unnecessary data from the PDF without compromising the readability of the text or the clarity of the images. It's fast, efficient, and free."
+        faqs={faqs}
+        relatedTools={relatedTools}
+        onToolClick={onToolClick}
+      />
     </>
   );
 }

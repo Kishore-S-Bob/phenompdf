@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import SingleDropZone from '../components/SingleDropZone';
 import PdfPreview from '../components/PdfPreview';
 import LoadingOverlay from '../components/LoadingOverlay';
+import SEOContent from '../components/SEOContent';
 import { API_BASE } from '../api';
 
-export default function RotatePage() {
+export default function RotatePage({ onToolClick }) {
   const [file, setFile] = useState(null);
   const [totalPages, setTotalPages] = useState(0);
   const [angle, setAngle] = useState(0);
@@ -14,8 +15,25 @@ export default function RotatePage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    document.title = 'Rotate PDF – PhenomPDF';
+    document.title = 'Rotate PDF Pages – PhenomPDF';
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Rotate your PDF pages permanently. Rotate single pages or the entire document clockwise or counter-clockwise with PhenomPDF.');
+    }
   }, []);
+
+  const faqs = [
+    {
+      question: 'Can I rotate only one page in a PDF?',
+      answer: 'Yes, you can select individual pages and rotate them to the desired orientation.'
+    }
+  ];
+
+  const relatedTools = [
+    { id: 'merge', label: 'Merge PDF' },
+    { id: 'split', label: 'Split PDF' },
+    { id: 'reorder', label: 'Reorder PDF' }
+  ];
 
   const handleFileAdded = (newFile) => {
     setFile(newFile);
@@ -99,8 +117,8 @@ export default function RotatePage() {
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
           Rotate PDF Files Easily
         </h1>
-        <p className="text-gray-500">
-          Rotate all pages or specific pages by 90°, 180°, or 270°
+        <p className="text-gray-500 max-w-2xl mx-auto">
+          Rotate your PDF pages permanently with PhenomPDF. Rotate single pages or the entire document clockwise or counter-clockwise.
         </p>
       </div>
 
@@ -228,6 +246,14 @@ export default function RotatePage() {
           'Rotate PDF'
         )}
       </button>
+
+      <SEOContent
+        toolName="Rotate PDF"
+        description="Rotate PDF is a handy tool that allows you to correct the orientation of your PDF pages. Whether you scanned a document upside down or just need to change the layout from portrait to landscape, our tool makes it easy to rotate individual pages or the whole document. Your files are processed securely in your browser."
+        faqs={faqs}
+        relatedTools={relatedTools}
+        onToolClick={onToolClick}
+      />
     </>
   );
 }

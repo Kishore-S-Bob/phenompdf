@@ -3,6 +3,10 @@ import { useEffect } from 'react';
 export default function PrivacyPage() {
   useEffect(() => {
     document.title = 'Privacy Policy – PhenomPDF';
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Privacy Policy for PhenomPDF. Learn how we handle your PDF files and personal data securely.');
+    }
   }, []);
 
   return (

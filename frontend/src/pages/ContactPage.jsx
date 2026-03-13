@@ -2,7 +2,11 @@ import { useEffect } from 'react';
 
 export default function ContactPage() {
   useEffect(() => {
-    document.title = 'Contact – PhenomPDF';
+    document.title = 'Contact Us – PhenomPDF';
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Contact PhenomPDF for questions, feedback, or issues with our online PDF tools.');
+    }
   }, []);
 
   return (

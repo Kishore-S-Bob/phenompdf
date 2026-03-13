@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import SingleDropZone from '../components/SingleDropZone';
 import LoadingOverlay from '../components/LoadingOverlay';
+import SEOContent from '../components/SEOContent';
 import { API_BASE } from '../api';
 
-export default function UnlockPage() {
+export default function UnlockPage({ onToolClick }) {
   const [file, setFile] = useState(null);
   const [password, setPassword] = useState('');
   const [isUnlocking, setIsUnlocking] = useState(false);
@@ -11,8 +12,25 @@ export default function UnlockPage() {
   const [unlockedFile, setUnlockedFile] = useState(null);
 
   useEffect(() => {
-    document.title = 'Unlock PDF – PhenomPDF';
+    document.title = 'Unlock Password Protected PDF – PhenomPDF';
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Remove password protection from your PDF files. Unlock and access your secured PDFs easily with PhenomPDF.');
+    }
   }, []);
+
+  const faqs = [
+    {
+      question: 'Can I remove a password from a PDF?',
+      answer: 'Yes, if you know the password, you can use PhenomPDF to remove the protection for easier access.'
+    }
+  ];
+
+  const relatedTools = [
+    { id: 'protect', label: 'Protect PDF' },
+    { id: 'edit-pdf', label: 'Edit PDF' },
+    { id: 'merge', label: 'Merge PDF' }
+  ];
 
   const handleFileAdded = (newFile) => {
     setFile(newFile);
@@ -84,8 +102,8 @@ export default function UnlockPage() {
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
           Unlock PDF Files
         </h1>
-        <p className="text-gray-500">
-          Remove password protection from your PDF file
+        <p className="text-gray-500 max-w-2xl mx-auto">
+          Remove password protection from your PDF files with PhenomPDF. Unlock and access your secured PDFs easily.
         </p>
       </div>
 
@@ -169,6 +187,14 @@ export default function UnlockPage() {
           'Unlock PDF'
         )}
       </button>
+
+      <SEOContent
+        toolName="Unlock PDF"
+        description="Unlock PDF is designed to help you remove restrictions from your own PDF files. If you have a document that is password-protected and you want to remove that layer for easier access or sharing, our tool can do it in seconds. Please note that you must know the current password to use this tool effectively."
+        faqs={faqs}
+        relatedTools={relatedTools}
+        onToolClick={onToolClick}
+      />
     </>
   );
 }

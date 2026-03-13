@@ -3,6 +3,7 @@ import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import SingleDropZone from '../components/SingleDropZone';
 import LoadingOverlay from '../components/LoadingOverlay';
+import SEOContent from '../components/SEOContent';
 import { API_BASE } from '../api';
 
 const ItemType = 'PAGE';
@@ -72,7 +73,7 @@ function PageThumbnail({ index, pageNumber, onMove, total }) {
   );
 }
 
-export default function ReorderPage() {
+export default function ReorderPage({ onToolClick }) {
   const [file, setFile] = useState(null);
   const [pageOrder, setPageOrder] = useState([]);
   const [totalPages, setTotalPages] = useState(0);
@@ -81,8 +82,25 @@ export default function ReorderPage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    document.title = 'Reorder PDF – PhenomPDF';
+    document.title = 'Reorder PDF Pages Online – PhenomPDF';
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Change the order of pages in your PDF file. Drag and drop pages to rearrange them exactly how you want with PhenomPDF.');
+    }
   }, []);
+
+  const faqs = [
+    {
+      question: 'How do I rearrange pages in a PDF?',
+      answer: 'Upload your PDF, drag and drop the pages into your preferred order, and download the result instantly.'
+    }
+  ];
+
+  const relatedTools = [
+    { id: 'merge', label: 'Merge PDF' },
+    { id: 'split', label: 'Split PDF' },
+    { id: 'rotate', label: 'Rotate PDF' }
+  ];
 
   const handleFileAdded = async (newFile) => {
     setFile(newFile);
@@ -208,8 +226,8 @@ export default function ReorderPage() {
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
           Reorder PDF Pages Online
         </h1>
-        <p className="text-gray-500">
-          Upload a PDF and drag pages to reorder them
+        <p className="text-gray-500 max-w-2xl mx-auto">
+          Change the order of pages in your PDF file with PhenomPDF. Drag and drop pages to rearrange them exactly how you want.
         </p>
       </div>
 
@@ -292,6 +310,14 @@ export default function ReorderPage() {
           'Apply Changes'
         )}
       </button>
+
+      <SEOContent
+        toolName="Reorder PDF"
+        description="Reorder PDF is an intuitive tool that gives you full control over the page sequence of your PDF documents. Simply upload your file, and you'll see a thumbnail for each page. Drag them into your desired order, and our tool will generate a new PDF with the exact sequence you've chosen. It's the easiest way to organize your documents online."
+        faqs={faqs}
+        relatedTools={relatedTools}
+        onToolClick={onToolClick}
+      />
     </DndProvider>
   );
 }

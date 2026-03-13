@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import SingleDropZone from '../components/SingleDropZone';
 import LoadingOverlay from '../components/LoadingOverlay';
+import SEOContent from '../components/SEOContent';
 import { API_BASE } from '../api';
 
-export default function PdfToImagePage() {
+export default function PdfToImagePage({ onToolClick }) {
   const [file, setFile] = useState(null);
   const [format, setFormat] = useState('png');
   const [isConverting, setIsConverting] = useState(false);
@@ -11,8 +12,25 @@ export default function PdfToImagePage() {
   const [isConverted, setIsConverted] = useState(false);
 
   useEffect(() => {
-    document.title = 'PDF to Image – PhenomPDF';
+    document.title = 'Convert PDF to Image Online – PhenomPDF';
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Convert PDF pages into high-quality images (PNG/JPG) online. Extract images from your PDF easily with PhenomPDF.');
+    }
   }, []);
+
+  const faqs = [
+    {
+      question: 'Can I convert each PDF page to an image?',
+      answer: 'Yes, our tool converts every page of your PDF into a separate high-quality image.'
+    }
+  ];
+
+  const relatedTools = [
+    { id: 'image-to-pdf', label: 'Image → PDF' },
+    { id: 'compress', label: 'Compress PDF' },
+    { id: 'merge', label: 'Merge PDF' }
+  ];
 
   const handleFileAdded = (newFile) => {
     setFile(newFile);
@@ -75,8 +93,8 @@ export default function PdfToImagePage() {
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
           PDF to Image Converter
         </h1>
-        <p className="text-gray-500">
-          Convert PDF pages to PNG or JPG images
+        <p className="text-gray-500 max-w-2xl mx-auto">
+          Convert PDF pages into high-quality images online with PhenomPDF. Extract each page as a separate image easily.
         </p>
       </div>
 
@@ -186,6 +204,14 @@ export default function PdfToImagePage() {
           'Convert to Image'
         )}
       </button>
+
+      <SEOContent
+        toolName="PDF to Image"
+        description="PDF to Image is a versatile tool that converts your PDF pages into popular image formats like PNG and JPG. This is perfect for when you want to use a PDF page in a presentation, post it on social media, or include it in a document that only accepts image files. Each page is converted with high fidelity, preserving all details of the original PDF."
+        faqs={faqs}
+        relatedTools={relatedTools}
+        onToolClick={onToolClick}
+      />
     </>
   );
 }

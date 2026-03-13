@@ -1,16 +1,34 @@
 import { useState, useEffect } from 'react';
 import SingleDropZone from '../components/SingleDropZone';
 import LoadingOverlay from '../components/LoadingOverlay';
+import SEOContent from '../components/SEOContent';
 import { API_BASE } from '../api';
 
-export default function ReversePdfPage() {
+export default function ReversePdfPage({ onToolClick }) {
   const [file, setFile] = useState(null);
   const [isReversing, setIsReversing] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    document.title = 'Reverse PDF Pages – PhenomPDF';
+    document.title = 'Reverse PDF Pages Online – PhenomPDF';
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'Reverse the order of pages in your PDF document. Quick and easy online tool to flip your PDF page sequence with PhenomPDF.');
+    }
   }, []);
+
+  const faqs = [
+    {
+      question: 'Can I reverse the page order of a PDF?',
+      answer: 'Yes, simply upload your PDF and click Reverse PDF to flip the page sequence instantly.'
+    }
+  ];
+
+  const relatedTools = [
+    { id: 'reorder', label: 'Reorder PDF' },
+    { id: 'rotate', label: 'Rotate PDF' },
+    { id: 'merge', label: 'Merge PDF' }
+  ];
 
   const handleFileAdded = (newFile) => {
     setFile(newFile);
@@ -70,8 +88,8 @@ export default function ReversePdfPage() {
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
           Reverse PDF Pages
         </h1>
-        <p className="text-gray-500">
-          Flip the order of pages in your PDF file
+        <p className="text-gray-500 max-w-2xl mx-auto">
+          Reverse the order of pages in your PDF document with PhenomPDF. Quick and easy online tool to flip your PDF page sequence.
         </p>
       </div>
 
@@ -146,6 +164,14 @@ export default function ReversePdfPage() {
           'Reverse Pages'
         )}
       </button>
+
+      <SEOContent
+        toolName="Reverse PDF"
+        description="Reverse PDF is a simple but powerful tool that flips the page order of your PDF document. This is especially useful for documents scanned in reverse order or when you need to change the presentation sequence of your slides or reports. Our tool is fast, free, and runs entirely in your web browser."
+        faqs={faqs}
+        relatedTools={relatedTools}
+        onToolClick={onToolClick}
+      />
     </>
   );
 }
