@@ -114,6 +114,15 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('merge');
   const [showInfoPage, setShowInfoPage] = useState(null);
 
+  // Set homepage title and meta description
+  useEffect(() => {
+    document.title = "PhenomPDF – Free Online PDF Tools | Merge, Split, Compress, Convert PDFs";
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 'PhenomPDF is a free online PDF toolkit that lets you merge, split, compress, convert, rotate, and edit PDF files quickly and securely.');
+    }
+  }, []);
+
   const tools = [
     { id: 'merge', label: 'Merge PDF', description: 'Combine multiple PDFs into one', icon: MergeIcon },
     { id: 'split', label: 'Split PDF', description: 'Extract pages from your PDF', icon: SplitIcon },
